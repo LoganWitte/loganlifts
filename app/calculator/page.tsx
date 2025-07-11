@@ -15,11 +15,7 @@ export default function page() {
     const [weight, setWeight] = useState(defaultWeight);
     const [reps, setReps] = useState(defaultReps);
     const [formula, setFormula] = useState("Recommended");
-    const [oneRepMax, setOneRepMax] = useState<number | undefined>()
-
-    function handleFormulaInfoClick() {
-
-    }
+    const [oneRepMax, setOneRepMax] = useState<number | undefined>();
 
     function handleLogClick() {
 
@@ -38,13 +34,32 @@ export default function page() {
         function oneRepMaxOConnor(weight: number, reps: number) {
             return weight*(1+0.025*(reps === 1 ? 0 : reps));
         }
-        setOneRepMax(
-            formula === "Recommended" ? ((oneRepMaxBrzycki(weight, reps) + oneRepMaxEpley(weight, reps))/2) :
-            formula === "Brzycki" ? (oneRepMaxBrzycki(weight, reps)) :
-            formula === "Epley" ? (oneRepMaxEpley(weight, reps)) :
-            formula === "Lombardi" ? (oneRepMaxLombardi(weight, reps)) :
-            formula === "OConnor" ? (oneRepMaxOConnor(weight, reps)) : 0
-        )
+        if(weight <= 0 || reps <= 0) {
+            setOneRepMax(0);
+            return;
+        }
+        if(formula === "Recommended") {
+            if(reps <= 8) {
+                // Reps 1-8: Brzycki formula
+                setOneRepMax(oneRepMaxBrzycki(weight, reps));
+            }
+            else if(reps <= 10) {
+                // Reps 9-10: Linear interpolation of Brzycki & Epley formulae
+                setOneRepMax((oneRepMaxBrzycki(weight, reps) + oneRepMaxEpley(weight, reps))/2)
+            }
+            else {
+                // Reps 11+: Epley formula
+                setOneRepMax(oneRepMaxEpley(weight, reps));
+            }
+        }
+        else {
+            setOneRepMax(
+                formula === "Brzycki" ? (oneRepMaxBrzycki(weight, reps)) :
+                formula === "Epley" ? (oneRepMaxEpley(weight, reps)) :
+                formula === "Lombardi" ? (oneRepMaxLombardi(weight, reps)) :
+                formula === "OConnor" ? (oneRepMaxOConnor(weight, reps)) : 0
+            );
+        }
     }, [weight, reps, formula, oneRepMax])
     
 
@@ -58,7 +73,7 @@ export default function page() {
                     <input 
                         type="number" id="weight" name="weight" min="1" max="10000" step="1" defaultValue={defaultWeight} 
                         className="bg-gray-300 border border-black p-1 ml-1 w-20"
-                        onChange={(e) => setWeight(parseInt(e.target.value))}
+                        onChange={(e) => setWeight(isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value))}
                     />
                 </div>
                 <div className="w-full flex flex-row items-center justify-between p-2">
@@ -66,7 +81,7 @@ export default function page() {
                     <input 
                         type="number" id="reps" name="reps" min="1" max="100" step="1" defaultValue={defaultReps} 
                         className="bg-gray-300 border border-black p-1 ml-1 w-20"
-                        onChange={(e) => setReps(parseInt(e.target.value))}
+                        onChange={(e) => setReps(isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value))}
                     />
                 </div>
                 <div className="w-full flex flex-row items-center justify justify-between p-2">
@@ -81,7 +96,7 @@ export default function page() {
                         <option value="Lombardi">Lombardi</option>
                         <option value="OConnor">O'Connor</option>
                     </select>
-                    <Link href="/calculationinfo" ><CircleQuestionMark className="ml-1 opacity-75 hover:opacity-100 hover:cursor-pointer" onClick={handleFormulaInfoClick}/></Link>
+                    <Link href="/calculationinfo" ><CircleQuestionMark className="ml-1 opacity-75 hover:opacity-100 hover:cursor-pointer" /></Link>
                     
                 </div>
                 <div className="w-full flex flex-col items-center p-2">
