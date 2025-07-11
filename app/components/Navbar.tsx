@@ -15,7 +15,7 @@ export default function navbar() {
             <Link href="/" className="p-2 text-black text-lg sm:text-2xl md:text-4xl">
                 Logan Lifts™
             </Link>
-            <div className="flex text-sm sm:text-md md:text-xl text-center overflow-x-auto">
+            <div className="flex text-sm sm:text-md md:text-xl text-center overflow-x-auto items-center">
                 <Link href="/calculator" className="p-2 my-2 mx-2 md:mx-4 hover:scale-105 transition duration-300 rounded-md bg-[#00000080] flex flex-nowrap items-center">
                     1RM Calculator
                     <Calculator className="ml-1" />
@@ -35,9 +35,9 @@ export default function navbar() {
                         <LogIn className="ml-1" />
                     </Link>
                     :
-                    <Link href="/auth" className="" title="Account">
+                    <Link href="/auth" className="w-[50px] h-[50px] m-2 shrink-0" title="Account">
                                 <Image src={session?.user?.image || default_avatar} alt="Account" width={50} height={50} 
-                                className="rounded-full m-2 hover:scale-105 transition duration-300 hover:cursor-pointer" />
+                                className="rounded-full hover:scale-105 transition duration-300 hover:cursor-pointer" />
                     </Link>
                 }
                 
