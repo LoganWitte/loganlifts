@@ -105,7 +105,6 @@ export default function page() {
                         className="bg-orange-500 p-2 rounded-xl sm:text-lg text-white font-bold flex hover:cursor-pointer border border-black mt-4 hover:bg-orange-500 hover:scale-105 transition duration-300"
                         onClick={handleLogClick}
                     >
-                        
                         Log this lift
                         <BicepsFlexed className="ml-2"/>
                     </button>
