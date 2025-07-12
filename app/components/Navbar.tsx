@@ -11,7 +11,7 @@ export default function navbar() {
     const { data: session, status } = useSession();
     
     return(
-        <div className="w-full max-w-screen h-fit bg-orange-500 border-b-1 border-black text-white flex items-center justify-between">
+        <div className="w-full h-fit bg-orange-500 border-b-1 border-black text-white flex items-center justify-between">
             <Link href="/" className="p-2 text-black text-lg sm:text-2xl md:text-4xl">
                 Logan Lifts™
             </Link>
