@@ -23,7 +23,7 @@ export default function page() {
                             <div className="text-center pb-1 my-1 border-b border-black flex items-center justify-center px-2 sm:px-4">1-8</div>
                             <div className="text-center pb-1 my-1 border-b border-black flex items-center justify-center px-2 sm:px-4">Brzycki formula</div>
                             <div className="text-xs pb-1 my-1 border-b border-black flex items-center justify-center px-2 sm:px-4">
-                                <BlockMath math={String.raw`weight \times (1 + reps) / 30`} />
+                                <BlockMath math={String.raw`weight \times\frac{1+reps}{30}`} />
                             </div>
                             {/* Row 2 */}
                             <div className="text-center pb-1 mb-1 border-b border-black flex items-center justify-center px-2 sm:px-4">9-10</div>
