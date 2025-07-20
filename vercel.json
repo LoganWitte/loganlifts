@@ -1,8 +1,4 @@
 {
-  "build": {
-    "env": {
-      "DATABASE_URL": "@your-database-url"
-    }
-  },
-  "installCommand": "pnpm install --unsafe-perm"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "next build",
 }
