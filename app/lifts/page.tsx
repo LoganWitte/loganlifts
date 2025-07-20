@@ -3,7 +3,7 @@
 export default function page() {
     return(
         <div>
-            Workouts
+            Lifts
         </div>
     );
 }

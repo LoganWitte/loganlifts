@@ -23,19 +23,19 @@ export default function page() {
                             <div className="text-center pb-1 my-1 border-b border-black flex items-center justify-center px-2 sm:px-4">1-8</div>
                             <div className="text-center pb-1 my-1 border-b border-black flex items-center justify-center px-2 sm:px-4">Brzycki formula</div>
                             <div className="text-xs pb-1 my-1 border-b border-black flex items-center justify-center px-2 sm:px-4">
-                                <BlockMath math={String.raw`weight \times\frac{1+reps}{30}`} />
+                                <BlockMath math={String.raw`\frac{weight \times 36}{37 - reps}`} />
                             </div>
                             {/* Row 2 */}
                             <div className="text-center pb-1 mb-1 border-b border-black flex items-center justify-center px-2 sm:px-4">9-10</div>
                             <div className="text-center pb-1 mb-1 border-b border-black flex items-center justify-center px-2 sm:px-4">Brzycki & Epley average</div>
                             <div className="text-xs  pb-1 mb-1 border-b border-black flex items-center justify-center px-2 sm:px-4">
-                                <BlockMath math={String.raw`\frac{Brzycki+Epley}{2}`} />
+                                <BlockMath math={String.raw`(\frac{Brzycki + Epley}{2})`} />
                             </div>
                             {/* Row 3 */}
                             <div className="text-center flex items-center justify-center px-2 sm:px-4">11+</div>
                             <div className="text-center flex items-center justify-center px-2 sm:px-4">Epley formula</div>
                             <div className="text-xs flex items-center justify-center px-2 sm:px-4">
-                                <BlockMath math={String.raw`\frac{weight}{1.0278 - 0.0278 \times reps}`} />
+                                <BlockMath math={String.raw`weight \times(\frac{1 + reps}{30})`} />
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@ export default function page() {
                             </div>
                             <div className="text-center pt-1 flex items-center justify-center px-4">
                                 <div className="text-xs flex items-center justify-center px-4">
-                                    <BlockMath math={String.raw`1 + 0.025 \times reps`} />
+                                    <BlockMath math={String.raw`1 + 0.025 \times (reps - 1)`} />
                                 </div>
                             </div>
                         </div>

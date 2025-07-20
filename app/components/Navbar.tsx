@@ -20,12 +20,12 @@ export default function navbar() {
                     1RM Calculator
                     <Calculator className="ml-1" />
                 </Link>
-                <Link href="/workouts" className="p-2 my-2 mx-2 md:mx-4 hover:scale-105 transition duration-300 rounded-md bg-[#00000080] flex flex-nowrap items-center">
-                    Workout Tracker 
+                <Link href="/lifts" className="p-2 my-2 mx-2 md:mx-4 hover:scale-105 transition duration-300 rounded-md bg-[#00000080] flex flex-nowrap items-center">
+                    Lifts 
                     <Dumbbell className="ml-1" />
                 </Link>
                 <Link href="nutrition" className="p-2 my-2 mx-2 md:mx-4 hover:scale-105 transition duration-300 rounded-md bg-[#00000080] flex flex-nowrap items-center">
-                    Nutrition Tracker
+                    Nutrition
                     <Apple className="ml-1" />
                 </Link>
                 {
