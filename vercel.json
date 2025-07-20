@@ -1,0 +1,8 @@
+{
+  "build": {
+    "env": {
+      "DATABASE_URL": "@your-database-url"
+    }
+  },
+  "installCommand": "pnpm install --unsafe-perm"
+}
