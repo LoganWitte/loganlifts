@@ -6,7 +6,7 @@ import { BlockMath } from 'react-katex';
 export default function page() {
     return (
         <div className="w-full h-fit min-h-screen flex flex-col items-center bg-gray-200 sm:bg-white">
-            <div className="min-w-[45%] h-fit flex flex-col items-center sm:bg-gray-200 sm:p-4 sm:m-4 sm:rounded sm:border border-black">
+            <div className="min-w-[45%] h-fit flex flex-col items-center sm:bg-gray-200 sm:p-4 sm:m-4 sm:rounded sm:border sm:border-black">
                 <div className="text-lg sm:text-2xl mt-2 font-semibold">Calculation Info & Formulae:</div>
                 <div className="mt-1 text-center">
                     Your <span className="font-semibold mx-1">1RM</span> (one-rep-maximum) is a common way to measure strength in a given movement.<br />

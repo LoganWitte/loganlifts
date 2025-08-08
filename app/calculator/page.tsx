@@ -78,8 +78,8 @@ export default function page() {
 
 
     return (
-        <div className="w-full h-fit flex flex-col items-center">
-            <div className="w-fit h-fit flex flex-col items-center bg-gray-200 p-4 m-4 rounded border border-black">
+        <div className="w-full h-fit min-h-screen flex flex-col items-center bg-gray-200 sm:bg-white">
+            <div className="w-fit h-fit flex flex-col items-center sm:bg-gray-200 sm:p-4 sm:m-4 sm:rounded sm:border sm:border-black">
                 <div className="text-lg sm:text-3xl my-4">1RM Calculator</div>
                 <ToggleSwitch useKgs={useKgs} setUseKgs={setUseKgs} />
                 <div className="w-full flex flex-row items-center justify-between p-2">
