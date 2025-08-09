@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { Calculator, Dumbbell, Apple, LogIn, LogOut } from 'lucide-react'
+import { Calculator, Dumbbell, Apple, LogIn, BicepsFlexed } from 'lucide-react'
 import { signOut, useSession } from "next-auth/react";
 import default_avatar from "../images/default_avatar.png"
 import Image from "next/image";

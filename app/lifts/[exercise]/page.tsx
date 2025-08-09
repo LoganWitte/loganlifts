@@ -3,7 +3,7 @@
 export default function page() {
     return(
         <div>
-            /lifts
+            /lifts/[exercise]
         </div>
     )
 }
