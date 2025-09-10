@@ -63,7 +63,7 @@ export async function POST(req: Request) {
             return new NextResponse("Invalid body parts", { status: 400 });
         }
 
-        if(!category || !["Barbell", "Bodyweight", "Dumbbell", "Machine", "Cable"].includes(category)) {
+        if(!category || !["Any Category", "Barbell", "Bodyweight", "Dumbbell", "Machine", "Cable"].includes(category)) {
             return new NextResponse("Invalid or missing category", { status: 400 });
         }
 

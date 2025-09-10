@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${font.className} antialiased w-screen min-h-screen h-fit bg-white overflow-x-hidden`}>
+      <body className={`${font.className} antialiased w-screen min-h-screen h-fit bg-white overflow-x-hidden flex flex-col items-center`}>
         <RootClientProvider children={children} />
       </body>
     </html>

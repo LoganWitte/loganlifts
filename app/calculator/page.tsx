@@ -78,8 +78,8 @@ export default function page() {
 
 
     return (
-        <div className="w-full h-fit min-h-screen flex flex-col items-center bg-gray-200 sm:bg-white">
-            <div className="w-fit h-fit flex flex-col items-center sm:bg-gray-200 sm:p-4 sm:m-4 sm:rounded sm:border sm:border-black">
+        <div className="w-full h-fit min-h-screen flex flex-col items-center bg-stone-400">
+            <div className="w-fit h-fit flex flex-col items-center bg-slate-200 p-4 m-4 rounded border border-black">
                 <div className="text-lg sm:text-3xl my-4">1RM Calculator</div>
                 <ToggleSwitch useKgs={useKgs} setUseKgs={setUseKgs} />
                 <div className="w-full flex flex-row items-center justify-between p-2">
@@ -120,7 +120,7 @@ export default function page() {
                 <div className="w-full flex flex-col items-center my-2">
                     <div className="text-2xl">Your 1RM: {oneRepMax?.toFixed(2)}{useKgs ? "kg" : "lb"}</div>
                     <button
-                        className="bg-orange-500 p-2 rounded-xl sm:text-lg text-white font-bold flex border border-black mt-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
+                        className="bg-orange-500 p-2 rounded-xl items-center sm:text-lg text-white font-bold flex border border-black mt-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
                         onClick={handleLogClick}
                     >
                         Log this lift

@@ -57,7 +57,7 @@ export async function getExercises(): Promise<Exercise[]> {
     }
 }
 
-type acceptedBodyPart = "Whole Body" | "Core" | "Legs" | "Back" | "Chest" | "Shoulders" | "Biceps" | "Triceps" | "Forearms";
+export type acceptedBodyPart = "Whole Body" | "Core" | "Legs" | "Back" | "Chest" | "Shoulders" | "Biceps" | "Triceps" | "Forearms";
 
 // Adds a new exercise (can be global if admin, user-specific otherwise)
 export async function addExercise(name: string, bodyParts: acceptedBodyPart[], category: Category, tags: string[], description?: string, global?: boolean): Promise<Exercise | null> {
