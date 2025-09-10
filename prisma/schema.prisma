@@ -83,6 +83,14 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
+enum Category {
+  Barbell
+  Bodyweight
+  Dumbbell
+  Machine
+  Cable
+}
+
 model Exercise {
   id          String   @id @default(cuid())
   userId      String? //Nullable to allow for default exercises
@@ -90,7 +98,7 @@ model Exercise {
   description String?
   URLSlug     String   @unique
   bodyParts   String[]
-  category    String
+  category    Category
   tags        String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
