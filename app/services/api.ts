@@ -1,7 +1,13 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
 
+// Note:
+// Following type declerations should be standard throughout app.
+// This includes frontend sanitization as well as schema.
+
 export type Category = "Barbell" | "Bodyweight" | "Dumbbell" | "Machine" | "Cable";
+
+export type acceptedBodyPart = "Whole Body" | "Core" | "Legs" | "Back" | "Chest" | "Shoulders" | "Biceps" | "Triceps" | "Forearms";
 
 export type Exercise = {
     id: string;                 //String @id @default(cuid())
@@ -56,8 +62,6 @@ export async function getExercises(): Promise<Exercise[]> {
         return [];
     }
 }
-
-export type acceptedBodyPart = "Whole Body" | "Core" | "Legs" | "Back" | "Chest" | "Shoulders" | "Biceps" | "Triceps" | "Forearms";
 
 // Adds a new exercise (can be global if admin, user-specific otherwise)
 export async function addExercise(name: string, bodyParts: acceptedBodyPart[], category: Category, tags: string[], description?: string, global?: boolean): Promise<Exercise | null> {

@@ -1,81 +1,35 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ToggleSwitch from "../components/ToggleSwitch";
 import { CircleQuestionMark, BicepsFlexed } from 'lucide-react'
 import Link from "next/link";
 import EquivalentLifts from "../components/EquivalentLifts";
+import { allowedFormula, getOneRepMax } from "../services/formulas";
 
 export default function page() {
 
+    // Must mirror 'allowedFormula' from 'formulas.ts':
+    // "Recommended" | "Brzycki" | "Epley" | "Lombardi" | "OConnor";
+    const FORMULA_OPTIONS = ["Recommended", "Brzycki", "Epley", "Lombardi", "OConnor"];
 
     {/* Default values */ }
-    const defaultWeight = 100;
+    const defaultWeight = 135;
     const defaultReps = 1;
-
+    const defaultFormula = "Recommended";
+    
     const [useKgs, setUseKgs] = useState(false);
     const [weight, setWeight] = useState(defaultWeight);
     const [reps, setReps] = useState(defaultReps);
-    type allowedFormula = "Recommended" | "Brzycki" | "Epley" | "Lombardi" | "OConnor";
-    const [formula, setFormula] = useState<allowedFormula>("Recommended");
-    const [oneRepMax, setOneRepMax] = useState<number | undefined>();
+    const [formula, setFormula] = useState<allowedFormula>(defaultFormula);
 
     function handleLogClick() {
-
+        return;
     }
 
-    useEffect(() => {
-
-        // Function declarations for different formulas
-        function oneRepMaxBrzycki(weight: number, reps: number) {
-            if(reps >= 37) return 0;
-            return (weight * 36) / (37 - reps);
-        }
-        function oneRepMaxEpley(weight: number, reps: number) {
-            return weight * (1 + reps / 30);
-        }
-        function oneRepMaxLombardi(weight: number, reps: number) {
-            return weight * (Math.pow(reps, 0.1));
-        }
-        function oneRepMaxOConnor(weight: number, reps: number) {
-            return weight * (1 + 0.025 * reps);
-        }
-
-        // Base cases
-        if (weight <= 0 || reps <= 0) {
-            setOneRepMax(0);
-            return;
-        }
-        if (reps === 1) {
-            setOneRepMax(weight);
-            return;
-        }
-
-        // Executes "Reccomended" formula
-        if (formula === "Recommended") {
-            if (reps <= 8) {
-                setOneRepMax(oneRepMaxBrzycki(weight, reps));
-            } 
-            else if (reps <= 10) {
-                setOneRepMax((oneRepMaxBrzycki(weight, reps) + oneRepMaxEpley(weight, reps)) / 2);
-            } 
-            else {
-                setOneRepMax(oneRepMaxEpley(weight, reps));
-            }
-        }
-
-        // Executes other selectable formulas
-        else {
-            setOneRepMax(
-                formula === "Brzycki" ? oneRepMaxBrzycki(weight, reps) : 
-                formula === "Epley" ? oneRepMaxEpley(weight, reps) : 
-                formula === "Lombardi" ? oneRepMaxLombardi(weight, reps) : 
-                formula === "OConnor" ? oneRepMaxOConnor(weight, reps) : 0
-            );
-        }
-
+    const oneRepMax = useMemo(() => {
+        return getOneRepMax(weight, reps, formula);
     }, [weight, reps, formula]);
-
 
     return (
         <div className="w-full h-fit min-h-screen flex flex-col items-center bg-stone-400">
@@ -85,7 +39,7 @@ export default function page() {
                 <div className="w-full flex flex-row items-center justify-between p-2">
                     <label htmlFor="weight" className="font-bold">Weight {useKgs ? "(kg)" : "(lb)"}:</label>
                     <input
-                        type="number" id="weight" name="weight" min="1" max="10000" step="1" defaultValue={defaultWeight}
+                        type="number" id="weight" name="weight" min="1" step="1" defaultValue={defaultWeight}
                         className="bg-gray-300 border border-black p-1 ml-1 w-20"
                         onChange={(e) => setWeight(isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value))}
                     />
@@ -93,7 +47,7 @@ export default function page() {
                 <div className="w-full flex flex-row items-center justify-between p-2">
                     <label htmlFor="reps" className="font-bold">Reps:</label>
                     <input
-                        type="number" id="reps" name="reps" min="1" max="100" step="1" defaultValue={defaultReps}
+                        type="number" id="reps" name="reps" min="1" step="1" defaultValue={defaultReps}
                         className="bg-gray-300 border border-black p-1 ml-1 w-20"
                         onChange={(e) => setReps(isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value))}
                     />
@@ -102,7 +56,7 @@ export default function page() {
                     <label htmlFor="formula" className="font-bold mr-6">Formula:</label>
                     <select value={formula} id="formula"
                         onChange={(e) => {
-                            if(["Recommended", "Brzycki", "Epley", "Lombardi", "OConnor"].includes(e.target.value)) {
+                            if(FORMULA_OPTIONS.includes(e.target.value)) {
                                 setFormula(e.target.value as allowedFormula);
                             }
                         }}
@@ -118,7 +72,7 @@ export default function page() {
 
                 </div>
                 <div className="w-full flex flex-col items-center my-2">
-                    <div className="text-2xl">Your 1RM: {oneRepMax?.toFixed(2)}{useKgs ? "kg" : "lb"}</div>
+                    <div className="text-2xl">Your 1RM: {oneRepMax !== undefined && oneRepMax.toFixed(2)}{oneRepMax === undefined ? "N/A" : useKgs ? "kg" : "lb"}</div>
                     <button
                         className="bg-orange-500 p-2 rounded-xl items-center sm:text-lg text-white font-bold flex border border-black mt-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
                         onClick={handleLogClick}

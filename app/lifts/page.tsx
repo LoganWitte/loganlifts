@@ -8,26 +8,18 @@ import DropdownMultiSelect from "../components/DropDownMultiSelect";
 import { BicepsFlexed, Globe, ArrowUpWideNarrow, ArrowDownWideNarrow} from "lucide-react";
 import ExerciseMiniature from "../components/ExerciseMiniature";
 
-// Exercise form options
+// MUST MIRROR 'Category' from 'formulas.ts':
+// "Barbell" | "Bodyweight" | "Dumbbell" | "Machine" | "Cable"
+// Exercise filter options
 const CATEGORY_OPTIONS = [
-    "Any Category",
-    "Barbell",
-    "Bodyweight",
-    "Dumbbell",
-    "Machine",
-    "Cable",
+    "Any Category", "Barbell", "Bodyweight", "Dumbbell", "Machine", "Cable"
 ];
+
+// MUST MIRROR 'acceptedBodyPart' from 'formulas.ts':
+// "Whole Body" | "Core" | "Legs" | "Back" | "Chest" | "Shoulders" | "Biceps" | "Triceps" | "Forearms"
+// Body part filter options
 const BODY_PART_OPTIONS = [
-    "Any Body Part",
-    "Whole Body",
-    "Core",
-    "Legs",
-    "Back",
-    "Chest",
-    "Shoulders",
-    "Biceps",
-    "Triceps",
-    "Forearms",
+    "Any Body Part", "Whole Body", "Core", "Legs", "Back", "Chest", "Shoulders", "Biceps", "Triceps", "Forearms"
 ];
 
 export default function ExercisesPage() {
@@ -142,7 +134,7 @@ export default function ExercisesPage() {
                 />
 
                 {/* Filters */}
-                <div className="flex flex-row flex-wrap gap-x-4 gap-y-2 justify-center">
+                <div className="flex flex-row flex-wrap gap-x-4 gap-y-2 justify-center items-center">
                     <div className="w-48">
                         <Dropdown
                             options={BODY_PART_OPTIONS}
@@ -157,27 +149,29 @@ export default function ExercisesPage() {
                             setSelected={setCategory}
                         />
                     </div>
-                    <button className="border border-black rounded bg-slate-200 px-2 flex flex-row hover:cursor-pointer hover:bg-slate-300"
-                        onClick={() => {
-                            if(maxExercises < filteredExercises.length) {
-                                setmaxExercises(maxExercises + 4);
-                            }
-                        }}>
-                        More exercises <ArrowUpWideNarrow className="ml-2" />
-                    </button>
-                    <button className="border border-black rounded bg-slate-200 px-2 flex flex-row hover:cursor-pointer hover:bg-slate-300"
-                        onClick={() => {
-                            if(maxExercises > filteredExercises.length) {
-                                setmaxExercises(Math.max(4, filteredExercises.length % 4 === 0 ? filteredExercises.length - 4: filteredExercises.length - filteredExercises.length % 4));
-                            }
-                            else {
-                                setmaxExercises(Math.max(4, maxExercises - 4));
-                            }
-                            }}>
-                        Fewer exercises <ArrowDownWideNarrow className="ml-2" />
-                    </button>
-                    <div>
-                        <p className="border border-black rounded bg-slate-200 px-2">Results: {maxExercises > filteredExercises.length ? filteredExercises.length : maxExercises} / {filteredExercises.length}</p>
+                    <div className="flex flex-row items-center justify-between border border-black rounded bg-slate-200 p-2">
+                        Results: {maxExercises > filteredExercises.length ? filteredExercises.length : maxExercises} / {filteredExercises.length}
+                        <ArrowUpWideNarrow
+                            size={32}
+                            className="ml-2 p-1 hover:cursor-pointer hover:bg-gray-300 rounded-full"
+                            onClick={() => { 
+                                if(maxExercises < filteredExercises.length) {
+                                    setmaxExercises(maxExercises + 4);
+                                }}
+                            } 
+                        />
+                        <ArrowDownWideNarrow 
+                            size={32}
+                            className="ml-2 p-1 hover:cursor-pointer hover:bg-gray-300 rounded-full"
+                            onClick={() => {
+                                if(maxExercises > filteredExercises.length) {
+                                    setmaxExercises(Math.max(4, filteredExercises.length % 4 === 0 ? filteredExercises.length - 4: filteredExercises.length - filteredExercises.length % 4));
+                                }
+                                else {
+                                    setmaxExercises(Math.max(4, maxExercises - 4));
+                                }
+                            }} 
+                        />
                     </div>
                 </div>
             </section>
