@@ -149,8 +149,8 @@ export default function ExercisesPage() {
                             setSelected={setCategory}
                         />
                     </div>
-                    <div className="flex flex-row items-center justify-between border border-black rounded bg-slate-200 p-2">
-                        Results: {maxExercises > filteredExercises.length ? filteredExercises.length : maxExercises} / {filteredExercises.length}
+                    <div className="flex flex-row items-center justify-between border border-black rounded bg-slate-200 px-2">
+                        <div className="select-none">Results: {maxExercises > filteredExercises.length ? filteredExercises.length : maxExercises} / {filteredExercises.length}</div>
                         <ArrowUpWideNarrow
                             size={32}
                             className="ml-2 p-1 hover:cursor-pointer hover:bg-gray-300 rounded-full"
