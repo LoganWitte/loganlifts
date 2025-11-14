@@ -1,45 +1,35 @@
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
-import { Exercise, getExercises, addExercise, checkAdmin } from "../services/api";
+import { Exercise, getExercises } from "../services/api";
 import Dropdown from "../components/DropDown";
-import { Category, acceptedBodyPart } from "../services/api";
-import DropdownMultiSelect from "../components/DropDownMultiSelect";
-import { BicepsFlexed, Globe, ArrowUpWideNarrow, ArrowDownWideNarrow} from "lucide-react";
+import { ArrowUpWideNarrow, ArrowDownWideNarrow, Plus } from "lucide-react";
 import ExerciseMiniature from "../components/ExerciseMiniature";
+import Link from "next/link";
 
 // MUST MIRROR 'Category' from 'formulas.ts':
 // "Barbell" | "Bodyweight" | "Dumbbell" | "Machine" | "Cable"
 // Exercise filter options
-const CATEGORY_OPTIONS = [
+export const CATEGORY_OPTIONS = [
     "Any Category", "Barbell", "Bodyweight", "Dumbbell", "Machine", "Cable"
 ];
 
 // MUST MIRROR 'acceptedBodyPart' from 'formulas.ts':
 // "Whole Body" | "Core" | "Legs" | "Back" | "Chest" | "Shoulders" | "Biceps" | "Triceps" | "Forearms"
 // Body part filter options
-const BODY_PART_OPTIONS = [
+export const BODY_PART_OPTIONS = [
     "Any Body Part", "Whole Body", "Core", "Legs", "Back", "Chest", "Shoulders", "Biceps", "Triceps", "Forearms"
 ];
 
 export default function ExercisesPage() {
-    const [isAdmin, setIsAdmin] = useState(false);
 
     // State
     const [bodyPart, setBodyPart] = useState(BODY_PART_OPTIONS[0]);
     const [category, setCategory] = useState(CATEGORY_OPTIONS[0]);
     const [searchQuery, setSearchQuery] = useState("");
     const [exercises, setExercises] = useState<Exercise[]>([]);
-    const [maxExercises, setmaxExercises] = useState(12);
-
-    //Add Exercise Form State
-    const [nameInput, setNameInput] = useState("");
-    const [descriptionInput, setDescriptionInput] = useState("");
-    const [categoryInput, setCategoryInput] = useState<Category | "Category">(
-        "Category"
-    );
-    const [bodyPartsInput, setBodyPartsInput] = useState<acceptedBodyPart[]>([]);
-    const [tagsInput, setTagsInput] = useState<string>("");
+    const [maxExercises, setMaxExercises] = useState(12);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Fetch exercise data
     useEffect(() => {
@@ -49,18 +39,8 @@ export default function ExercisesPage() {
                 setExercises(data);
             } catch (err) {
                 console.error("Failed to fetch exercises:", err);
-            }
-        })();
-    }, []);
-
-    // Fetch isAdmin
-    useEffect(() => {
-        (async () => {
-            try {
-                const adminStatus = await checkAdmin();
-                setIsAdmin(adminStatus);
-            } catch (err) {
-                console.error("Failed to check admin status:", err);
+            } finally {
+                setIsLoading(false);
             }
         })();
     }, []);
@@ -77,47 +57,6 @@ export default function ExercisesPage() {
                     ex.tags.some((tag) => tag.toLowerCase().includes(query)))
         );
     }, [exercises, bodyPart, category, searchQuery]);
-
-    function handleAddExerciseClick(global: boolean) {
-        // Basic validation
-        if (
-            nameInput.trim() === "" ||
-            categoryInput === "Category" ||
-            bodyPartsInput.length === 0
-        ) {
-            alert(
-                "Please fill in all required fields: Name, Category, and at least one Body Part."
-            );
-            return;
-        }
-        const tagsArray = tagsInput
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag !== "");
-        addExercise(
-            nameInput.trim(),
-            bodyPartsInput,
-            categoryInput,
-            tagsArray,
-            descriptionInput.trim() || undefined,
-            global
-        )
-            .then((newExercise) => {
-                if (newExercise) {
-                    setExercises((prev) => [...prev, newExercise]);
-                    // Clear form
-                    setNameInput("");
-                    setDescriptionInput("");
-                    setCategoryInput("Category");
-                    setBodyPartsInput([]);
-                    setTagsInput("");
-                }
-            })
-            .catch((err) => {
-                console.error("Failed to add exercise:", err);
-                alert("Failed to add exercise. Please try again.");
-            });
-    }
 
     return (
         <div className="w-full grow bg-stone-400 flex flex-col items-center py-4 overflow-auto">
@@ -150,25 +89,26 @@ export default function ExercisesPage() {
                         />
                     </div>
                     <div className="flex flex-row items-center justify-between border border-black rounded bg-slate-200 px-2">
-                        <div className="select-none">Results: {maxExercises > filteredExercises.length ? filteredExercises.length : maxExercises} / {filteredExercises.length}</div>
+                        <div className="select-none">
+                            Results: {Math.min(maxExercises, filteredExercises.length)} / {filteredExercises.length}
+                        </div>
                         <ArrowUpWideNarrow
                             size={32}
-                            className="ml-2 p-1 hover:cursor-pointer hover:bg-gray-300 rounded-full"
+                            className="ml-2 p-1 hover:cursor-pointer hover:bg-gray-300 rounded-full transition-colors"
                             onClick={() => { 
-                                if(maxExercises < filteredExercises.length) {
-                                    setmaxExercises(maxExercises + 4);
-                                }}
-                            } 
+                                if (maxExercises < filteredExercises.length) {
+                                    setMaxExercises(maxExercises + 4);
+                                }
+                            }} 
                         />
                         <ArrowDownWideNarrow 
                             size={32}
-                            className="ml-2 p-1 hover:cursor-pointer hover:bg-gray-300 rounded-full"
+                            className="ml-2 p-1 hover:cursor-pointer hover:bg-gray-300 rounded-full transition-colors"
                             onClick={() => {
-                                if(maxExercises > filteredExercises.length) {
-                                    setmaxExercises(Math.max(4, filteredExercises.length % 4 === 0 ? filteredExercises.length - 4: filteredExercises.length - filteredExercises.length % 4));
-                                }
-                                else {
-                                    setmaxExercises(Math.max(4, maxExercises - 4));
+                                if (maxExercises > filteredExercises.length) {
+                                    setMaxExercises(Math.max(4, filteredExercises.length % 4 === 0 ? filteredExercises.length - 4: filteredExercises.length - filteredExercises.length % 4));
+                                } else {
+                                    setMaxExercises(Math.max(4, maxExercises - 4));
                                 }
                             }} 
                         />
@@ -178,7 +118,11 @@ export default function ExercisesPage() {
 
             {/* Results */}
             <section className="min-w-fit w-[60vw] max-w-full py-2 px-8 sm:px-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {filteredExercises.length === 0 ? (
+                {isLoading ? (
+                    <p className="col-span-full text-center text-black font-bold text-xl">
+                        Loading exercises...
+                    </p>
+                ) : filteredExercises.length === 0 ? (
                     <p className="col-span-full text-center text-black font-bold text-xl">
                         No exercises found.
                     </p>
@@ -189,80 +133,16 @@ export default function ExercisesPage() {
                 )}
             </section>
 
-            {/* Add Exercise Form */}
-            <section className="min-w-fit w-[40vw] max-w-full p-2 flex flex-col items-center bg-slate-200 rounded border border-black">
-                <h3 className="text-xl sm:text-3xl text-orange-500 font-bold mb-4">
-                    Add an exercise
-                </h3>
-                <input
-                    id="name"
-                    type="text"
-                    value={nameInput}
-                    placeholder="Exercise Name"
-                    className="p-2 border border-black bg-slate-200 min-w-fit w-[50%]
-                        focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    onChange={(e) => {
-                        setNameInput(e.target.value);
-                    }}
-                />
-                <textarea
-                    id="description"
-                    value={descriptionInput}
-                    placeholder="Exercise Description (optional)"
-                    className="mt-2 p-2 border border-black bg-slate-200 min-w-fit w-[50%]
-                        focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize"
-                    onChange={(e) => {
-                        setDescriptionInput(e.target.value);
-                    }}
-                />
-                <div className="flex gap-x-4 my-2">
-                    <div className="w-40">
-                        <Dropdown
-                            options={["Category", ...CATEGORY_OPTIONS.slice(1)]}
-                            selected={categoryInput}
-                            setSelected={(value) => setCategoryInput(value as Category)}
-                        />
-                    </div>
-                    <div className="w-40">
-                        <DropdownMultiSelect
-                            label={"Body Part(s)"}
-                            options={BODY_PART_OPTIONS.slice(1)}
-                            selected={bodyPartsInput}
-                            setSelected={(value) =>
-                                setBodyPartsInput(value as acceptedBodyPart[])
-                            }
-                        />
-                    </div>
-                </div>
-                <textarea
-                    id="tags"
-                    value={tagsInput}
-                    placeholder="Other Tags (optional, seperate with commas. ex: powerlifting, olympic)"
-                    className="mb-2 p-2 border border-black bg-slate-200 min-w-fit w-[50%]
-                        focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize"
-                    onChange={(e) => {
-                        setTagsInput(e.target.value);
-                    }}
-                />
-                {/* Submit button area */}
-                <div className="flex gap-4 mb-2">
-                    <button
-                        className="bg-orange-500 p-2 rounded-xl sm:text-lg text-white font-bold flex border border-black hover:scale-105 transition duration-300 hover:cursor-pointer items-center"
-                        onClick={() => handleAddExerciseClick(false)}
-                    >
-                        Add Exercise
-                        <BicepsFlexed className="ml-2" />
+            {/* Add Exercise Link */}
+            <section className="min-w-fit w-[60vw] max-w-full mt-6 mb-4 flex justify-center">
+                <Link href="/lifts/add">
+                    <button className="bg-orange-500 px-6 py-3 rounded-xl text-lg text-white font-bold 
+                        flex items-center gap-2 border border-black 
+                        hover:scale-105 transition duration-300 hover:cursor-pointer shadow-md">
+                        <Plus size={24} />
+                        Create Custom Exercise
                     </button>
-                    {isAdmin && <>
-                        <button
-                            className="bg-orange-500 p-2 rounded-xl sm:text-lg text-white font-bold flex border border-black hover:scale-105 transition duration-300 hover:cursor-pointer items-center"
-                            onClick={() => handleAddExerciseClick(true)}
-                        >
-                            Add Exercise (Global)
-                            <Globe className="ml-2" />
-                        </button>
-                    </>}
-                </div>
+                </Link>
             </section>
         </div>
     );
