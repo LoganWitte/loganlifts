@@ -2,24 +2,11 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Exercise, getExercises } from "../services/api";
+import { BODY_PART_OPTIONS, CATEGORY_OPTIONS } from "../services/constants";
 import Dropdown from "../components/DropDown";
 import { ArrowUpWideNarrow, ArrowDownWideNarrow, Plus } from "lucide-react";
 import ExerciseMiniature from "../components/ExerciseMiniature";
 import Link from "next/link";
-
-// MUST MIRROR 'Category' from 'formulas.ts':
-// "Barbell" | "Bodyweight" | "Dumbbell" | "Machine" | "Cable"
-// Exercise filter options
-export const CATEGORY_OPTIONS = [
-    "Any Category", "Barbell", "Bodyweight", "Dumbbell", "Machine", "Cable"
-];
-
-// MUST MIRROR 'acceptedBodyPart' from 'formulas.ts':
-// "Whole Body" | "Core" | "Legs" | "Back" | "Chest" | "Shoulders" | "Biceps" | "Triceps" | "Forearms"
-// Body part filter options
-export const BODY_PART_OPTIONS = [
-    "Any Body Part", "Whole Body", "Core", "Legs", "Back", "Chest", "Shoulders", "Biceps", "Triceps", "Forearms"
-];
 
 export default function ExercisesPage() {
 
