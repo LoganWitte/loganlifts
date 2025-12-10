@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { ArrowDown, MoveHorizontal } from "lucide-react";

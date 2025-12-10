@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Dropdown from "@/app/components/DropDown";
 import DropdownMultiSelect from "@/app/components/DropDownMultiSelect";
@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { BODY_PART_OPTIONS, CATEGORY_OPTIONS } from "@/app/services/constants";
 import { Dumbbell, Globe, Loader2, CheckCircle2 } from "lucide-react";
 
-export default function AddLiftPage() {
+export default function AddExercisePage() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
     

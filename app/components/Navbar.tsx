@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import { Calculator, Dumbbell, Apple, LogIn, BicepsFlexed } from 'lucide-react'

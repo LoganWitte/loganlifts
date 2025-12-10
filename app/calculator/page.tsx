@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import ToggleSwitch from "../components/ToggleSwitch";
@@ -17,19 +17,19 @@ export default function page() {
     const defaultWeight = 135;
     const defaultReps = 1;
     const defaultFormula = "Recommended";
-    
+
     const [useKgs, setUseKgs] = useState(false);
     const [weight, setWeight] = useState(defaultWeight);
     const [reps, setReps] = useState(defaultReps);
     const [formula, setFormula] = useState<allowedFormula>(defaultFormula);
 
-    function handleLogClick() {
-        return;
-    }
-
     const oneRepMax = useMemo(() => {
         return getOneRepMax(weight, reps, formula);
     }, [weight, reps, formula]);
+
+    function roundWeight(weight: number) {
+        return Math.round(weight * 100) / 100;
+    }
 
     return (
         <div className="w-full h-fit min-h-screen flex flex-col items-center bg-stone-400">
@@ -41,7 +41,7 @@ export default function page() {
                     <input
                         type="number" id="weight" name="weight" min="1" step="1" defaultValue={defaultWeight}
                         className="bg-gray-300 border border-black p-1 ml-1 w-20"
-                        onChange={(e) => setWeight(isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value))}
+                        onChange={(e) => setWeight(isNaN(parseFloat(e.target.value)) ? 0 : roundWeight(parseFloat(e.target.value)))}
                     />
                 </div>
                 <div className="w-full flex flex-row items-center justify-between p-2">
@@ -73,13 +73,12 @@ export default function page() {
                 </div>
                 <div className="w-full flex flex-col items-center my-2">
                     <div className="text-2xl">Your 1RM: {oneRepMax !== undefined && oneRepMax.toFixed(2)}{oneRepMax === undefined ? "N/A" : useKgs ? "kg" : "lb"}</div>
-                    <button
+                    <Link
                         className="bg-orange-500 p-2 rounded-xl items-center sm:text-lg text-white font-bold flex border border-black mt-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
-                        onClick={handleLogClick}
-                    >
+                        href={`/lifts?weight=${weight}&reps=${reps}`}>
                         Log this lift
                         <BicepsFlexed className="ml-2" />
-                    </button>
+                    </Link>
                     <EquivalentLifts oneRepMax={oneRepMax} formula={formula} useKgs={useKgs} />
                 </div>
             </div>

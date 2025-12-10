@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Exercise } from "../services/api";
 import Link from "next/link";

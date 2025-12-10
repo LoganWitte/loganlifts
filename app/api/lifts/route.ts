@@ -3,22 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/authOptions";
 import prisma from "@/lib/prisma";
 
-function oneRepMaxRecommended(weight: number, reps: number) {
-    function oneRepMaxBrzycki(weight: number, reps: number) {
-    if(reps >= 37) return 0;
-        return (weight * 36) / (37 - reps);
-    }
-    function oneRepMaxEpley(weight: number, reps: number) {
-        return weight * (1 + reps / 30);
-    }
-    if (reps <= 8) {
-        return oneRepMaxBrzycki(weight, reps);
-    } else if (reps <= 10) {
-        return (oneRepMaxBrzycki(weight, reps) + oneRepMaxEpley(weight, reps)) / 2;
-    } else {
-        return oneRepMaxEpley(weight, reps);
-    }
-}
+import { getOneRepMax } from "@/app/services/formulas";
 
 // Returns all of a users lifts
 export async function GET(req: Request) {
@@ -69,7 +54,8 @@ export async function POST(req: Request) {
                 exerciseId,
                 weight,
                 reps,
-                oneRepMax: oneRepMaxRecommended(weight, reps)
+                // Fine bcs 'getOneRepMax' will never return undefined for "Recommended"
+                oneRepMax: getOneRepMax(weight, reps, "Recommended")!, 
             },
         });
 
