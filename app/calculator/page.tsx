@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ToggleSwitch from "../components/ToggleSwitch";
-import { CircleQuestionMark, BicepsFlexed } from 'lucide-react'
+import { CircleQuestionMark, BicepsFlexed, LogIn } from 'lucide-react'
 import Link from "next/link";
 import EquivalentLifts from "../components/EquivalentLifts";
 import { allowedFormula, getOneRepMax } from "../services/formulas";
+import { useSession } from "next-auth/react";
 
 export default function page() {
 
@@ -30,6 +31,9 @@ export default function page() {
     function roundWeight(weight: number) {
         return Math.round(weight * 100) / 100;
     }
+
+    // Checks logged in status
+    const { data: session, status } = useSession();
 
     return (
         <div className="w-full h-fit min-h-screen flex flex-col items-center bg-stone-400">
@@ -73,12 +77,18 @@ export default function page() {
                 </div>
                 <div className="w-full flex flex-col items-center my-2">
                     <div className="text-2xl">Your 1RM: {oneRepMax !== undefined && oneRepMax.toFixed(2)}{oneRepMax === undefined ? "N/A" : useKgs ? "kg" : "lb"}</div>
-                    <Link
-                        className="bg-orange-500 p-2 rounded-xl items-center sm:text-lg text-white font-bold flex border border-black mt-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
-                        href={`/lifts?weight=${weight}&reps=${reps}`}>
-                        Log this lift
-                        <BicepsFlexed className="ml-2" />
-                    </Link>
+                    
+                    {
+                        status === "loading" ? 
+                            <div className="bg-orange-500 p-2 rounded-xl items-center sm:text-lg text-white font-bold flex border border-black mt-4 hover:scale-105 transition duration-300 hover:cursor-pointer">Loading...</div>
+                            :
+                            <Link
+                                className="bg-orange-500 p-2 rounded-xl items-center sm:text-lg text-white font-bold flex border border-black mt-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
+                                href={status === "authenticated" ? `/lifts?weight=${weight}&reps=${reps}` : `/auth`}>
+                                {status === "authenticated" ? "Log this lift" : "Login to log this lift"}
+                                {status === "authenticated" ? <BicepsFlexed className="ml-2" /> : <LogIn className="ml-2" />}
+                            </Link>
+                    }
                     <EquivalentLifts oneRepMax={oneRepMax} formula={formula} useKgs={useKgs} />
                 </div>
             </div>

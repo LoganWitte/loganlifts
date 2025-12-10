@@ -1,6 +1,3 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/authOptions";
-
 // Note:
 // Following type declerations should be standard throughout app.
 // This includes frontend sanitization as well as schema.

@@ -7,6 +7,8 @@ import Dropdown from "../components/DropDown";
 import { ArrowUpWideNarrow, ArrowDownWideNarrow, Plus } from "lucide-react";
 import ExerciseMiniature from "../components/ExerciseMiniature";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useExerciseContext } from "../components/contextProviders/ExerciseProvider";
 
 export default function ExercisesPage() {
 
@@ -14,23 +16,12 @@ export default function ExercisesPage() {
     const [bodyPart, setBodyPart] = useState(BODY_PART_OPTIONS[0]);
     const [category, setCategory] = useState(CATEGORY_OPTIONS[0]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [exercises, setExercises] = useState<Exercise[]>([]);
     const [maxExercises, setMaxExercises] = useState(12);
-    const [isLoading, setIsLoading] = useState(true);
 
-    // Fetch exercise data
-    useEffect(() => {
-        (async () => {
-            try {
-                const data = await getExercises();
-                setExercises(data);
-            } catch (err) {
-                console.error("Failed to fetch exercises:", err);
-            } finally {
-                setIsLoading(false);
-            }
-        })();
-    }, []);
+    // Pulls exercises from context
+    const exerciseProvider = useExerciseContext();
+    const isLoading = exerciseProvider.isLoading;
+    const exercises = exerciseProvider.exercises;
 
     // Filter Logic
     const filteredExercises = useMemo(() => {
@@ -44,6 +35,21 @@ export default function ExercisesPage() {
                     ex.tags.some((tag) => tag.toLowerCase().includes(query)))
         );
     }, [exercises, bodyPart, category, searchQuery]);
+
+    // Recieves & sanitizes search params
+    // Weight is (float, >= 0, rounded to 2 places) or undefined if not present
+    // Reps is (integer, >= 0) or undefined if not present
+    const searchParams = useSearchParams();
+    const weightParam = searchParams.get('weight');
+    const repsParam = searchParams.get('reps');
+    let weight: number | undefined = weightParam == null ? undefined : parseFloat(weightParam);
+    let reps: number | undefined = repsParam == null ? undefined : parseInt(repsParam);
+    if(weight !== undefined) {
+        weight = isNaN(weight) ? undefined : Math.max(Math.round(weight * 100) / 100, 0);
+    }
+    if(reps !== undefined) {
+        reps = isNaN(reps) ? undefined : Math.max(reps, 0)
+    }
 
     return (
         <div className="w-full grow bg-stone-400 flex flex-col items-center py-4 overflow-auto">
@@ -115,7 +121,7 @@ export default function ExercisesPage() {
                     </p>
                 ) : (
                     filteredExercises.slice(0, maxExercises).map((exercise) => (
-                        <ExerciseMiniature key={exercise.id} exercise={exercise} />
+                        <ExerciseMiniature key={exercise.id} exercise={exercise} weight={weight} reps={reps} />
                     ))
                 )}
             </section>

@@ -1,15 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { Exercise } from "../services/api";
 import Link from "next/link";
 
 type ExerciseMiniatureProps = {
     exercise: Exercise;
+    weight: number | undefined;
+    reps: number | undefined;
 }
 
 export default function ExerciseMiniature(props: ExerciseMiniatureProps) {
 
-    const { exercise } = props;
+    const { exercise, weight, reps } = props;
 
     type TagProps = {
         tag: String;
@@ -23,7 +26,7 @@ export default function ExerciseMiniature(props: ExerciseMiniatureProps) {
 
     return (
         <Link 
-            href={`/lifts/${exercise.URLSlug}`}
+            href={`/lifts/${exercise.URLSlug}?id=${exercise.id}&weight=${weight || 0}&reps=${reps || 0}`}
             className="bg-white rounded shadow p-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
         >
 
