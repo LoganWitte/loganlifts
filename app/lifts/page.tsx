@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { Exercise, getExercises } from "../services/api";
 import { BODY_PART_OPTIONS, CATEGORY_OPTIONS } from "../services/constants";
 import Dropdown from "../components/DropDown";
@@ -10,8 +10,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useExerciseContext } from "../components/contextProviders/ExerciseProvider";
 
-export default function ExercisesPage() {
-
+function ExercisesContent() {
     // State
     const [bodyPart, setBodyPart] = useState(BODY_PART_OPTIONS[0]);
     const [category, setCategory] = useState(CATEGORY_OPTIONS[0]);
@@ -37,8 +36,6 @@ export default function ExercisesPage() {
     }, [exercises, bodyPart, category, searchQuery]);
 
     // Recieves & sanitizes search params
-    // Weight is (float, >= 0, rounded to 2 places) or undefined if not present
-    // Reps is (integer, >= 0) or undefined if not present
     const searchParams = useSearchParams();
     const weightParam = searchParams.get('weight');
     const repsParam = searchParams.get('reps');
@@ -138,5 +135,15 @@ export default function ExercisesPage() {
                 </Link>
             </section>
         </div>
+    );
+}
+
+export default function ExercisesPage() {
+    return (
+        <Suspense fallback={<div className="w-full grow bg-stone-400 flex items-center justify-center">
+            <p className="text-black font-bold text-xl">Loading...</p>
+        </div>}>
+            <ExercisesContent />
+        </Suspense>
     );
 }
