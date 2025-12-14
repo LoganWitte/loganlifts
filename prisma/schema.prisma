@@ -115,6 +115,7 @@ model Lift {
   weight     Float
   reps       Int
   oneRepMax  Float
+  time       DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

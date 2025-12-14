@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     }
 
     try {
-        const { exerciseId, weight, reps } = await req.json();
+        const { exerciseId, weight, reps, time } = await req.json();
 
         if (!exerciseId || typeof exerciseId !== "string") {
             return new NextResponse("Invalid or missing exerciseId", { status: 400 });
@@ -54,6 +54,7 @@ export async function POST(req: Request) {
                 exerciseId,
                 weight,
                 reps,
+                time,
                 // Fine bcs 'getOneRepMax' will never return undefined for "Recommended"
                 oneRepMax: getOneRepMax(weight, reps, "Recommended")!, 
             },

@@ -52,7 +52,7 @@ export default function Page() {
     }, [exercise]);
 
     // Logs a single lift
-    async function handleLogClick(weight: number, reps: number): Promise<boolean> {
+    async function handleLogClick(weight: number, reps: number, time: Date): Promise<boolean> {
         if(!exercise) {
             window.alert("Invalid exercise");
             return false;
@@ -67,7 +67,7 @@ export default function Page() {
         }
         try {
             // API call to add lift
-            const newLift = await addLift(exercise.id, weight, reps);
+            const newLift = await addLift(exercise.id, weight, reps, time);
             if(!newLift) throw new Error("Failed to add lift");
             
             // Update local state with the new lift (success!)

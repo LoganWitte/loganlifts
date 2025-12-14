@@ -95,12 +95,12 @@ export async function getLifts(): Promise<Lift[]> {
 }
 
 // Logs a new lift for the user
-export async function addLift(exerciseId: string, weight: number, reps: number): Promise<Lift | null> {
+export async function addLift(exerciseId: string, weight: number, reps: number, time: Date): Promise<Lift | null> {
     try {
         const response: Response = await fetch('/api/lifts', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ exerciseId, weight, reps }),
+            body: JSON.stringify({ exerciseId, weight, reps, time }),
         });
         if (!response.ok) {
             throw new Error(`Failed to add lift: ${response.status} ${response.statusText}`);
