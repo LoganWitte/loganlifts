@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Exercise } from "../services/api";
 import Link from "next/link";
 
@@ -14,6 +13,24 @@ export default function ExerciseMiniature(props: ExerciseMiniatureProps) {
 
     const { exercise, weight, reps } = props;
 
+    // Constructs href link with optional weight and reps query params
+    let hrefLink = `/lifts/${exercise.URLSlug}`;
+    if(weight == undefined && reps == undefined) {
+        // No weight or reps
+    }
+    else if(weight != undefined && reps == undefined) {
+        // Have weight but no reps
+        hrefLink += `?weight=${weight}`;
+    }
+    else if(reps != undefined && weight == undefined) {
+        // Have reps but no weight
+        hrefLink += `?reps=${reps}`;
+    }
+    else {
+        // Have both weight and reps
+        hrefLink += `?weight=${weight}&reps=${reps}`;
+    }
+
     type TagProps = {
         tag: String;
     }
@@ -26,7 +43,7 @@ export default function ExerciseMiniature(props: ExerciseMiniatureProps) {
 
     return (
         <Link 
-            href={`/lifts/${exercise.URLSlug}?id=${exercise.id}&weight=${weight || 0}&reps=${reps || 0}`}
+            href={hrefLink}
             className="bg-white rounded shadow p-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
         >
 

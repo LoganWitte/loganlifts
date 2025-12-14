@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense } from "react";
-import { Exercise, getExercises } from "../services/api";
+import { useState, useMemo, Suspense } from "react";
 import { BODY_PART_OPTIONS, CATEGORY_OPTIONS } from "../services/constants";
 import Dropdown from "../components/DropDown";
 import { ArrowUpWideNarrow, ArrowDownWideNarrow, Plus } from "lucide-react";
@@ -140,9 +139,11 @@ function ExercisesContent() {
 
 export default function ExercisesPage() {
     return (
-        <Suspense fallback={<div className="w-full grow bg-stone-400 flex items-center justify-center">
-            <p className="text-black font-bold text-xl">Loading...</p>
-        </div>}>
+        <Suspense fallback={
+            <div className="w-full grow bg-stone-400 flex items-center justify-center">
+                <p className="text-black font-bold text-xl">Loading...</p>
+            </div>
+        }>
             <ExercisesContent />
         </Suspense>
     );
