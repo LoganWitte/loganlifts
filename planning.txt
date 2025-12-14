@@ -1,0 +1,9 @@
+TODO:
+    Add 'PATCH' endpoint to '/api/lifts/route' which allows user to update weight, reps, or time
+    Add corresponding updateTime() function to '/services/api'
+    In '/[exercise]':
+        Create form to add a lift, recieves: { weight: number, reps: number, time?: DateTime }
+            Requires DateTime form to be created.
+        Create graphical display (x -> time, y -> 1RM) for 'userLifts'
+            Graph should allow users to click on and edit { weight, reps, time }, or delete a lift.
+                Edit form requires usage of same DateTime form as previously.

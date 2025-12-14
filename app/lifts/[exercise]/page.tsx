@@ -90,11 +90,6 @@ export default function Page() {
     if (!exercise) {
         return <div>Exercise not found</div>;
     }
-
-    // Have: id, weight, reps, exercise, userLifts, handleLogClick()
-    // TODO:
-    // * Display previous lifts
-    // * Allow logging new lift with prefilled weight/reps if present
     
     return(
         <div>
