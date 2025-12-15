@@ -5,9 +5,14 @@ import DropdownMultiSelect from "@/app/components/DropDownMultiSelect";
 import { Category, acceptedBodyPart, addExercise, checkAdmin } from "@/app/services/api";
 import { useState, useEffect } from "react";
 import { BODY_PART_OPTIONS, CATEGORY_OPTIONS } from "@/app/services/constants";
-import { Dumbbell, Globe, Loader2, CheckCircle2 } from "lucide-react";
+import { Dumbbell, Globe, Loader2, CheckCircle2, LogIn } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function AddExercisePage() {
+
+    // Checks logged in status
+    const { data: session, status } = useSession();
     const [isAdmin, setIsAdmin] = useState(false);
     const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
     
@@ -39,6 +44,9 @@ export default function AddExercisePage() {
 
     // Validation function
     const validateForm = () => {
+        if(!session?.user || isSubmitting) {
+            return false;
+        }
         const newErrors: {[key: string]: string} = {};
         
         if (nameInput.trim() === "") {
@@ -130,7 +138,7 @@ export default function AddExercisePage() {
             )}
 
             {/* Name Input */}
-            <div className="w-full flex flex-col items-center mb-4">
+            <div className={`w-full flex flex-col items-center mb-4 ${session?.user ? "" : "opacity-50 pointer-events-none"}`}>
                 <input
                     id="name"
                     type="text"
@@ -155,15 +163,15 @@ export default function AddExercisePage() {
                 id="description"
                 value={descriptionInput}
                 placeholder="Exercise Description (optional)"
-                className="mb-4 p-2 border border-black bg-slate-200 min-w-fit w-[50%] h-24
-                    focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-y"
+                className={`${session?.user ? "" : "opacity-50 pointer-events-none"} mb-4 p-2 border border-black bg-slate-200 min-w-fit w-[50%] h-24
+                    focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-y`}
                 onChange={(e) => {
                     setDescriptionInput(e.target.value);
                 }}
             />
 
             {/* Dropdowns */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-4 w-full justify-center items-center">
+            <div className={`${session?.user ? "" : "opacity-50 pointer-events-none"} flex flex-col sm:flex-row gap-4 mb-4 w-full justify-center items-center`}>
                 <div className="w-40">
                     <Dropdown
                         options={["Category *", ...CATEGORY_OPTIONS.slice(1)]}
@@ -203,8 +211,8 @@ export default function AddExercisePage() {
                 id="tags"
                 value={tagsInput}
                 placeholder="Other Tags (optional, separate with commas. ex: powerlifting, olympic)"
-                className="mb-4 p-2 border border-black bg-slate-200 min-w-fit w-[50%] h-16
-                    focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-y"
+                className={`${session?.user ? "" : "opacity-50 pointer-events-none"} mb-4 p-2 border border-black bg-slate-200 min-w-fit w-[50%] h-16
+                    focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-y`}
                 onChange={(e) => {
                     setTagsInput(e.target.value);
                 }}
@@ -212,14 +220,25 @@ export default function AddExercisePage() {
 
             {/* Submit Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-2">
-                <button
+                <Link
+                    href={session?.user ? "" : "/auth"}
                     className="bg-orange-500 p-3 rounded-xl sm:text-lg text-white font-bold flex border border-black 
                         hover:scale-105 transition duration-300 hover:cursor-pointer items-center justify-center
                         disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    onClick={() => handleAddExerciseClick(false)}
-                    disabled={isSubmitting}
+                    onClick={() => session?.user ? handleAddExerciseClick(false) : null}
                 >
-                    {isSubmitting ? (
+                    {status === "loading" ? (
+                        <>
+                            <Loader2 className="mr-2 animate-spin" />
+                            Checking login status...
+                        </>
+                    ) : status === "unauthenticated" ? (
+                        <>
+                            Login to add exercise
+                            <LogIn className="ml-2" />
+                        </>
+                    ) :
+                    isSubmitting ? (
                         <>
                             <Loader2 className="mr-2 animate-spin" />
                             Adding...
@@ -230,7 +249,7 @@ export default function AddExercisePage() {
                             <Dumbbell className="ml-2" />
                         </>
                     )}
-                </button>
+                </Link>
                 
                 {!isCheckingAdmin && isAdmin && (
                     <button
