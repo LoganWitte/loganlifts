@@ -26,6 +26,7 @@ export type Lift = {
     weight: number;             //Float
     reps: number;               //Int
     oneRepMax: number;          //Float
+    time: string;               //DateTime
     createdAt: string;          //DateTime @default(now())
     updatedAt: string;          //DateTime @updatedAt
 };
@@ -109,6 +110,25 @@ export async function addLift(exerciseId: string, weight: number, reps: number, 
         return data;
     } catch (error) {
         console.error("Error adding lift:", error);
+        return null;
+    }
+}
+
+// Updates an existing lift (partial updates for weight, reps, or time)
+export async function updateLift(id: string, updates: { weight?: number; reps?: number; time?: Date }): Promise<Lift | null> {
+    try {
+        const response: Response = await fetch('/api/lifts', {
+            method: 'PATCH',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, ...updates }),
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to update lift: ${response.status} ${response.statusText}`);
+        }
+        const data: Lift = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error updating lift:", error);
         return null;
     }
 }
