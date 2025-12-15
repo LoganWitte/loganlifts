@@ -7,28 +7,27 @@ type ExerciseMiniatureProps = {
     exercise: Exercise;
     weight: number | undefined;
     reps: number | undefined;
+    inKgs: boolean | undefined
 }
 
 export default function ExerciseMiniature(props: ExerciseMiniatureProps) {
 
-    const { exercise, weight, reps } = props;
+    const { exercise, weight, reps, inKgs } = props;
 
-    // Constructs href link with optional weight and reps query params
+    // Constructs href link with optional weight, reps, and isKgs query params
     let hrefLink = `/lifts/${exercise.URLSlug}`;
-    if(weight == undefined && reps == undefined) {
-        // No weight or reps
+    const params = [];
+    if(weight !== undefined) {
+        params.push(`weight=${weight}`);
     }
-    else if(weight != undefined && reps == undefined) {
-        // Have weight but no reps
-        hrefLink += `?weight=${weight}`;
+    if(reps !== undefined) {
+        params.push(`reps=${reps}`);
     }
-    else if(reps != undefined && weight == undefined) {
-        // Have reps but no weight
-        hrefLink += `?reps=${reps}`;
+    if(inKgs !== undefined) {
+        params.push(`inKgs=${inKgs}`);
     }
-    else {
-        // Have both weight and reps
-        hrefLink += `?weight=${weight}&reps=${reps}`;
+    if(params.length > 0) {
+        hrefLink += `?${params.join('&')}`;
     }
 
     type TagProps = {

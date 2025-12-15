@@ -84,7 +84,7 @@ export default function page() {
                             :
                             <Link
                                 className="bg-orange-500 p-2 rounded-xl items-center sm:text-lg text-white font-bold flex border border-black mt-4 hover:scale-105 transition duration-300 hover:cursor-pointer"
-                                href={status === "authenticated" ? `/lifts?weight=${weight}&reps=${reps}` : `/auth`}>
+                                href={status === "authenticated" ? `/lifts?weight=${weight}&reps=${reps}&inKgs=${useKgs}` : `/auth`}>
                                 {status === "authenticated" ? "Log this lift" : "Login to log this lift"}
                                 {status === "authenticated" ? <BicepsFlexed className="ml-2" /> : <LogIn className="ml-2" />}
                             </Link>

@@ -2,6 +2,7 @@
 
 import { useExerciseContext } from "@/app/components/contextProviders/ExerciseProvider";
 import { addLift, getLifts, Lift } from "@/app/services/api";
+import { kgsToPounds } from "@/app/services/formulas";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -10,6 +11,7 @@ export default function Page() {
     // Recieves & sanitizes search params
     const searchParams = useSearchParams();
     const weightParam = searchParams.get('weight');
+    const isKgsParam = searchParams.get('inKgs') === "true";
     let convertedWeight: number | undefined = weightParam == null ? undefined : parseFloat(weightParam);
     if(convertedWeight !== undefined) {
         convertedWeight = isNaN(convertedWeight) ? undefined : Math.max(Math.round(convertedWeight * 100) / 100, 0);
@@ -25,6 +27,7 @@ export default function Page() {
     // Initial reps is (integer, >= 0) or undefined if not present
     const [weight, setWeight] = useState<number>(convertedWeight || 135);
     const [reps, setReps] = useState<number>(convertedReps || 1);
+    const [inKgs, setInKgs] = useState<boolean>(isKgsParam);
 
     // Pulls exercises from context
     const { exercises, isLoading } = useExerciseContext();
@@ -52,7 +55,7 @@ export default function Page() {
     }, [exercise]);
 
     // Logs a single lift
-    async function handleLogClick(weight: number, reps: number, time: Date): Promise<boolean> {
+    async function handleLogClick(weight: number, reps: number, inKgs: boolean, time: Date): Promise<boolean> {
         if(!exercise) {
             window.alert("Invalid exercise");
             return false;
@@ -67,7 +70,7 @@ export default function Page() {
         }
         try {
             // API call to add lift
-            const newLift = await addLift(exercise.id, weight, reps, time);
+            const newLift = await addLift(exercise.id, inKgs ? kgsToPounds(weight) : weight, reps, time);
             if(!newLift) throw new Error("Failed to add lift");
             
             // Update local state with the new lift (success!)
@@ -97,6 +100,7 @@ export default function Page() {
             <p>ID: {exercise.id}</p>
             <p>Weight: {weight}</p>
             <p>Reps: {reps}</p>
+            <p>In Kgs: {inKgs ? "Yes" : "No"}</p>
         </div>
     )
 }

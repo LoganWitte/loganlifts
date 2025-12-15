@@ -38,6 +38,7 @@ function ExercisesContent() {
     const searchParams = useSearchParams();
     const weightParam = searchParams.get('weight');
     const repsParam = searchParams.get('reps');
+    const inKgsParam = searchParams.get('inKgs');
     let weight: number | undefined = weightParam == null ? undefined : parseFloat(weightParam);
     let reps: number | undefined = repsParam == null ? undefined : parseInt(repsParam);
     if(weight !== undefined) {
@@ -117,7 +118,7 @@ function ExercisesContent() {
                     </p>
                 ) : (
                     filteredExercises.slice(0, maxExercises).map((exercise) => (
-                        <ExerciseMiniature key={exercise.id} exercise={exercise} weight={weight} reps={reps} />
+                        <ExerciseMiniature key={exercise.id} exercise={exercise} weight={weight} reps={reps} inKgs={inKgsParam === "true"} />
                     ))
                 )}
             </section>

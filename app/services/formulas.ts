@@ -59,3 +59,13 @@ export function getWeight(oneRepMax: number, reps: number, formula: allowedFormu
             return oneRepMax / (1 + 0.025 * reps);
     }
 }
+
+// Converts pounds to kilograms (rounded, 2 places)
+export function poundsToKgs(pounds: number): number {
+    return Math.round((pounds * 0.45359237) * 100) / 100;
+}
+
+// Converts kilograms to pounds (rounded, 2 places)
+export function kgsToPounds(kgs: number): number {
+    return Math.round((kgs / 0.45359237) * 100) / 100;
+}
