@@ -3,10 +3,13 @@
 import { useExerciseContext } from "@/app/components/contextProviders/ExerciseProvider";
 import { addLift, getLifts, Lift } from "@/app/services/api";
 import { kgsToPounds } from "@/app/services/formulas";
+import { useSession } from "next-auth/react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 export default function Page() {
+
+    const { data: session, status } = useSession();
 
     // Recieves & sanitizes search params
     const searchParams = useSearchParams();
@@ -41,6 +44,7 @@ export default function Page() {
     // Fetches all of a users' lifts in this exercise
     const [userLifts, setUserLifts] = useState<Lift[]>([]);
     useEffect(() => {
+        if(!(status === "authenticated")) return;
         async function fetchUserLifts() {
             if(!exercise) return;
             try {
@@ -56,6 +60,10 @@ export default function Page() {
 
     // Logs a single lift
     async function handleLogClick(weight: number, reps: number, inKgs: boolean, time: Date): Promise<boolean> {
+        if(!(status === "authenticated")) {
+            window.alert("You must be logged in to log lifts");
+            return false;
+        };
         if(!exercise) {
             window.alert("Invalid exercise");
             return false;
@@ -95,12 +103,17 @@ export default function Page() {
     }
     
     return(
-        <div>
+        
+        /*<div>
             <h1>Exercise: {exercise.name}</h1>
             <p>ID: {exercise.id}</p>
             <p>Weight: {weight}</p>
             <p>Reps: {reps}</p>
             <p>In Kgs: {inKgs ? "Yes" : "No"}</p>
+        </div>*/
+
+        <div className="w-full h-fit bg-slate-200 sm:bg-stone-400">
+
         </div>
     )
 }

@@ -30,6 +30,11 @@ export default function AddExercisePage() {
 
     // Fetch isAdmin
     useEffect(() => {
+        if(!(status === "authenticated")) {
+            setIsAdmin(false);
+            setIsCheckingAdmin(false);
+            return;
+        };
         (async () => {
             try {
                 const adminStatus = await checkAdmin();

@@ -7,7 +7,7 @@ Notes:
         4.  'git push' : Deploys migration to production
     Installing dependencies (do once): 'pnpm install'
     Refreshing dependencies (rarely needed): 
-        1. delete 'node_modules' and 'pnpm-lock.yaml' (at root directory)
+        1. delete 'node_modules' (at root directory)
         2. 'pnpm install'
     Running locally: 
         1. 'pnpm run dev' : Starts in development mode
