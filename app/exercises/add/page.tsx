@@ -122,7 +122,7 @@ export default function AddExercisePage() {
     }
 
     return (
-        <section className="min-w-fit w-[40vw] max-w-full p-6 flex flex-col items-center bg-slate-200 rounded border border-black mt-8">
+        <section className="min-w-fit w-[40vw] max-w-full p-6 mb-6 flex flex-col items-center bg-slate-200 rounded border border-black mt-8">
             <h3 className="text-xl sm:text-3xl text-orange-500 font-bold mb-6">
                 Add Custom Exercise
             </h3>

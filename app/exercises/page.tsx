@@ -125,7 +125,7 @@ function ExercisesContent() {
 
             {/* Add Exercise Link */}
             <section className="min-w-fit w-[60vw] max-w-full mt-6 mb-4 flex justify-center">
-                <Link href="/lifts/add">
+                <Link href="/exercises/add">
                     <button className="bg-orange-500 px-6 py-3 rounded-xl text-lg text-white font-bold 
                         flex items-center gap-2 border border-black 
                         hover:scale-105 transition duration-300 hover:cursor-pointer shadow-md">

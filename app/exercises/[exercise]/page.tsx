@@ -101,19 +101,38 @@ export default function Page() {
     if (!exercise) {
         return <div>Exercise not found</div>;
     }
+
+    const row = "w-full flex flex-row items-center justify-center my-1 mt-2 mb-1";
+    const h2 = "text font-semibold";
+    const p = "flex flex-row text-center";
     
     return(
-        
-        /*<div>
-            <h1>Exercise: {exercise.name}</h1>
-            <p>ID: {exercise.id}</p>
-            <p>Weight: {weight}</p>
-            <p>Reps: {reps}</p>
-            <p>In Kgs: {inKgs ? "Yes" : "No"}</p>
-        </div>*/
 
-        <div className="w-full h-fit bg-slate-200 sm:bg-stone-400">
+        <div className="w-full h-fit min-h-screen flex flex-col items-center bg-slate-200 sm:bg-stone-400">
+            <div className="min-w-[45%] h-fit flex flex-col items-center 
+            sm:bg-slate-200 sm:p-4 sm:m-4 sm:rounded sm:border sm:border-black">
+                <h1 className="text-2xl font-semibold m -2">{exercise.name}</h1>
 
+                <div className={row}>
+                    <h2 className={h2}>Description:</h2>
+                </div>
+                <p className={p + " sm:max-w-[65%] max-w-[90%]"}>{exercise.description}</p>
+
+                <div className={row}>
+                    <h2 className={h2}>Category:</h2>
+                    <p className={p + " ml-2"}>{exercise.category}</p>
+                </div>
+                
+                <div className={row}>
+                    <h2 className={h2}>Affected regions:</h2>
+                    <p className={p + " ml-2"}>{exercise.bodyParts.join(", ")}</p>
+                </div>
+
+                <div className={row}>
+                    <h2 className={h2}>Tags:</h2>
+                    <p className={p + " ml-2"}>{exercise.tags.join(", ")}</p>
+                </div>
+            </div>
         </div>
     )
 }

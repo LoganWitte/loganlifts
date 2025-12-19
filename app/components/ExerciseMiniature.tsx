@@ -15,7 +15,7 @@ export default function ExerciseMiniature(props: ExerciseMiniatureProps) {
     const { exercise, weight, reps, inKgs } = props;
 
     // Constructs href link with optional weight, reps, and isKgs query params
-    let hrefLink = `/lifts/${exercise.URLSlug}`;
+    let hrefLink = `/exercises/${exercise.URLSlug}`;
     const params = [];
     if(weight !== undefined) {
         params.push(`weight=${weight}`);
