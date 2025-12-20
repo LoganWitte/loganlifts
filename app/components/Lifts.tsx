@@ -5,7 +5,7 @@ import { Lift } from "../services/api";
 import ToggleSwitch from "./ToggleSwitch";
 import { BicepsFlexed } from "lucide-react";
 import { getOneRepMax } from "../services/formulas";
-import LiftChart from "./LiftChart";
+import LiftsChart from "./LiftsChart";
 import { useSearchParams } from "next/navigation";
 
 type LiftsProps = {
@@ -78,7 +78,7 @@ export default function Lifts(props: LiftsProps) {
         <div className="flex flex-col items-center p-2">
             <ToggleSwitch falseString="Pounds" trueString="Kilograms" value={useKgs} setValue={setUseKgs} />
             {/*TODO: Replace below div w/ graph element, likely using library.*/}
-            <LiftChart lifts={lifts} useKgs={useKgs} />
+            <LiftsChart lifts={lifts} useKgs={useKgs} />
             <div className="w-full flex flex-col justify-center border border-t-0">
                 <ToggleSwitch falseString="Add new" trueString="Edit existing" value={editEnabled} setValue={setEditEnabled} />
                 {!editEnabled ? (
