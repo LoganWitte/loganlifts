@@ -1,6 +1,7 @@
 "use client";
 
 import { useExerciseContext } from "@/app/components/contextProviders/ExerciseProvider";
+import Lifts from "@/app/components/Lifts";
 import { addLift, getLifts, Lift } from "@/app/services/api";
 import { kgsToPounds } from "@/app/services/formulas";
 import { useSession } from "next-auth/react";
@@ -59,7 +60,7 @@ export default function Page() {
     }, [exercise]);
 
     // Logs a single lift
-    async function handleLogClick(weight: number, reps: number, inKgs: boolean, time: Date): Promise<boolean> {
+    async function logLift(weight: number, reps: number, inKgs: boolean, time: Date): Promise<boolean> {
         if(!(status === "authenticated")) {
             window.alert("You must be logged in to log lifts");
             return false;
@@ -109,14 +110,14 @@ export default function Page() {
     return(
 
         <div className="w-full h-fit min-h-screen flex flex-col items-center bg-slate-200 sm:bg-stone-400">
-            <div className="min-w-[45%] h-fit flex flex-col items-center 
+            <div className="min-w-[45%] max-w-full h-fit flex flex-col items-center 
             sm:bg-slate-200 sm:p-4 sm:m-4 sm:rounded sm:border sm:border-black">
                 <h1 className="text-2xl font-semibold m -2">{exercise.name}</h1>
 
                 <div className={row}>
                     <h2 className={h2}>Description:</h2>
                 </div>
-                <p className={p + " sm:max-w-[65%] max-w-[90%]"}>{exercise.description}</p>
+                <p className={p + " sm:max-w-[65%] max-w-[90%] wrap-break-word"}>{exercise.description}</p>
 
                 <div className={row}>
                     <h2 className={h2}>Category:</h2>
@@ -132,6 +133,13 @@ export default function Page() {
                     <h2 className={h2}>Tags:</h2>
                     <p className={p + " ml-2"}>{exercise.tags.join(", ")}</p>
                 </div>
+
+                <div className="text-xl mt-4 mb-1 font-semibold">Your Lifts:</div>
+                {status === "authenticated" ? 
+                    <Lifts lifts={userLifts} logLift={logLift} /> : status === "loading" ? 
+                    <div>Loading...</div> : 
+                    <div>Please login to see your lifts</div>
+                }
             </div>
         </div>
     )
