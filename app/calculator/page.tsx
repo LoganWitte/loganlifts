@@ -39,7 +39,7 @@ export default function page() {
         <div className="w-full h-fit min-h-screen flex flex-col items-center bg-stone-400">
             <div className="w-fit h-fit flex flex-col items-center bg-slate-200 p-4 m-4 rounded border border-black">
                 <div className="text-lg sm:text-3xl my-4">1RM Calculator</div>
-                <ToggleSwitch useKgs={useKgs} setUseKgs={setUseKgs} />
+                <ToggleSwitch trueString="Kilograms" falseString="Pounds" value={useKgs} setValue={setUseKgs} />
                 <div className="w-full flex flex-row items-center justify-between p-2">
                     <label htmlFor="weight" className="font-bold">Weight {useKgs ? "(kg)" : "(lb)"}:</label>
                     <input
