@@ -2,7 +2,7 @@
 
 import { useExerciseContext } from "@/app/components/contextProviders/ExerciseProvider";
 import Lifts from "@/app/components/Lifts";
-import { addLift, getLifts, Lift } from "@/app/services/api";
+import { addLift, updateLift, deleteLift, getLifts, Lift } from "@/app/services/api";
 import { kgsToPounds } from "@/app/services/formulas";
 import { useSession } from "next-auth/react";
 import { useParams, useSearchParams } from "next/navigation";
@@ -92,51 +92,110 @@ export default function Page() {
             return false;
         }
     }
+
+    // Edits a single lift
+    async function editLift(id: string, updates: { weight?: number; reps?: number; time?: Date }): Promise<boolean> {
+        if(userLifts.find(lift => lift.id === id) === undefined) {
+            window.alert("Unable to edit lift: lift not found.");
+            return false;
+        }
+        if(weight !== undefined && weight <= 0) {
+            window.alert("Unable to edit lift: invalid weight.");
+            return false;
+        }
+        if(reps !== undefined && (reps <= 0 || !Number.isInteger(reps))) {
+            window.alert("Unable to edit lift: invalid reps.");
+            return false;
+        }
+        try {
+            const newLift = await updateLift(id, updates);
+            if(newLift === null) throw new Error("Failed to update lift");
+
+            // Amends lift with new lift
+            const newUserLifts = [...userLifts];
+            const liftIndex = newUserLifts.findIndex(lift => lift.id === id);
+            if(liftIndex === -1) {
+                console.error("Failed to find lift to update. Please refresh page.");
+                window.alert("Failed to update lift. Please refresh the page.");
+                return false;
+            }
+            newUserLifts[liftIndex] = newLift;
+            setUserLifts(newUserLifts);
+            return true;
+
+        } catch(error) {
+            console.error("Error updating lift:", error);
+            window.alert("Failed to update lift. Please try again.");
+            return false;
+        }
+    }
+
+    // Deletes a single lift
+    async function removeLift(id: string): Promise<boolean> {
+        const indexOf = userLifts.findIndex(lift => lift.id === id);
+        if(indexOf === -1) {
+            window.alert("Unable to delete lift: lift not found.");
+            return false;
+        }
+        try {
+            const deletedLift = await deleteLift(id);
+            if(deletedLift !== null) {
+                const newUserLifts = [...userLifts];
+                newUserLifts.splice(indexOf, 1);
+                setUserLifts(newUserLifts);
+                return true;
+            }
+            else {
+                throw new Error("Backend error. Please refresh page.")
+            }
+        } catch(error) {
+            console.error("Error deleting lift:", error);
+            window.alert("Failed to delete lift. Please try again.");
+            return false;
+        }
+    }
     
     // Handle loading state
     if (isLoading) {
-        return <div>Loading exercises...</div>;
+        return <div className="flex items-center justify-center min-h-screen">Loading exercises...</div>;
     }
     
     // Handle exercise not found
     if (!exercise) {
-        return <div>Exercise not found</div>;
+        return <div className="flex items-center justify-center min-h-screen">Exercise not found</div>;
     }
-
-    const row = "w-full flex flex-row items-center justify-center my-1 mt-2 mb-1";
-    const h2 = "text font-semibold";
-    const p = "flex flex-row text-center";
     
     return(
-
-        <div className="w-full h-fit min-h-screen flex flex-col items-center bg-slate-200 sm:bg-stone-400">
-            <div className="min-w-[45%] max-w-full h-fit flex flex-col items-center 
-            sm:bg-slate-200 sm:p-4 sm:m-4 sm:rounded sm:border sm:border-black">
-                <h1 className="text-2xl font-semibold m -2">{exercise.name}</h1>
-
-                <div className={row}>
-                    <h2 className={h2}>Description:</h2>
-                </div>
-                <p className={p + " sm:max-w-[65%] max-w-[90%] wrap-break-word"}>{exercise.description}</p>
-
-                <div className={row}>
-                    <h2 className={h2}>Category:</h2>
-                    <p className={p + " ml-2"}>{exercise.category}</p>
-                </div>
+        <div className="w-full min-h-screen flex flex-col items-center bg-slate-200 sm:bg-stone-400 p-4">
+            <div className="w-full max-w-4xl flex flex-col items-center bg-slate-200 sm:p-6 sm:my-4 sm:rounded-lg sm:border sm:border-black">
                 
-                <div className={row}>
-                    <h2 className={h2}>Affected regions:</h2>
-                    <p className={p + " ml-2"}>{exercise.bodyParts.join(", ")}</p>
+                <h1 className="text-2xl font-semibold mb-6">{exercise.name}</h1>
+
+                <div className="w-full max-w-2xl space-y-4 mb-6">
+                    <div>
+                        <h2 className="font-semibold mb-2">Description:</h2>
+                        <p className="text-gray-700">{exercise.description}</p>
+                    </div>
+
+                    <div className="flex gap-2">
+                        <h2 className="font-semibold">Category:</h2>
+                        <p className="text-gray-700">{exercise.category}</p>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                        <h2 className="font-semibold">Affected regions:</h2>
+                        <p className="text-gray-700">{exercise.bodyParts.join(", ")}</p>
+                    </div>
+
+                    <div className="flex gap-2">
+                        <h2 className="font-semibold">Tags:</h2>
+                        <p className="text-gray-700">{exercise.tags.join(", ")}</p>
+                    </div>
                 </div>
 
-                <div className={row}>
-                    <h2 className={h2}>Tags:</h2>
-                    <p className={p + " ml-2"}>{exercise.tags.join(", ")}</p>
-                </div>
-
-                <div className="text-xl mt-4 mb-1 font-semibold">Your Lifts:</div>
+                <div className="text-xl font-semibold mb-4">Your Lifts:</div>
                 {status === "authenticated" ? 
-                    <Lifts lifts={userLifts} logLift={logLift} /> : status === "loading" ? 
+                    <Lifts lifts={userLifts} logLift={logLift} editLift={editLift} deleteLift={removeLift} /> : status === "loading" ? 
                     <div>Loading...</div> : 
                     <div>Please login to see your lifts</div>
                 }

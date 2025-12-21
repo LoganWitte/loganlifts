@@ -69,6 +69,7 @@ export async function POST(req: Request) {
 
 // Updates a user's lift (partial updates for weight, reps, or time)
 export async function PATCH(req: Request) {
+
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user?.id) {
@@ -125,6 +126,35 @@ export async function PATCH(req: Request) {
         return NextResponse.json(updatedLift, { status: 200 });
     } catch (error) {
         console.error("Error updating lift:", error);
+        return new NextResponse("Internal Server Error", { status: 500 });
+    }
+}
+
+// Deletes a user's lift
+export async function DELETE(req: Request) {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+        return new NextResponse("Unauthorized", { status: 401 });
+    }
+    try {
+        const { id } = await req.json();
+        if (!id || typeof id !== "string") {
+            return new NextResponse("Invalid or missing id", { status: 400 });
+        }
+        // Check if lift exists and belongs to user
+        const existingLift = await prisma.lift.findFirst({
+            where: { id, userId: session.user.id }
+        });
+        if (!existingLift) {
+            return new NextResponse("Lift not found or not authorized", { status: 404 });
+        }
+        const prismaResponse = await prisma.lift.delete({
+            where: { id }
+        });
+        
+        return NextResponse.json(prismaResponse);
+    } catch (error) {
+        console.error("Error deleting lift:", error);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }

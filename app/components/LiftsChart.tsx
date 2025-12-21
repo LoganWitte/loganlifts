@@ -1,28 +1,123 @@
 "use client";
 
-import { Lift } from "../services/api";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Label, ResponsiveContainer, Tooltip } from 'recharts';
+import { Lift } from '../services/api';
+import { poundsToKgs } from '../services/formulas';
 
-type props = {
+type LiftsChartProps = {
     lifts: Lift[];
     useKgs: boolean;
-}
+    selectedLift: Lift | undefined;
+    setSelectedLift: (lift: Lift | undefined) => void;
+};
 
-export default function LiftsChart({ lifts, useKgs }: props) {
-
-    // Sort lifts by time and format data for chart
+export default function LiftsChart({ lifts, useKgs, selectedLift, setSelectedLift }: LiftsChartProps) {
+    
     const chartData = lifts
         .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
         .map(lift => ({
+            id: lift.id,
             date: new Date(lift.time).toLocaleDateString(),
             dateTime: new Date(lift.time).toLocaleString(),
-            oneRepMax: lift.oneRepMax,
-            weight: lift.weight,
+            oneRepMax: useKgs ? poundsToKgs(lift.oneRepMax) : lift.oneRepMax,
+            weight: useKgs ? poundsToKgs(lift.weight) : lift.weight,
             reps: lift.reps
         }));
 
+    // Handle click on a lift in the chart
+    function handleLiftClick(liftId: string) {
+        if(selectedLift?.id === liftId) {
+            setSelectedLift(undefined);
+        }
+        else {
+            const lift = lifts.find(lift => lift.id === liftId);
+            if(lift === undefined) {
+                console.error(`Lift with id ${liftId} not found`);
+            }
+            // Note: still clears selection if lift is undefined (should never happen)
+            setSelectedLift(lift);
+        }
+    }
+
+    // Custom dot component for clickable points
+    const CustomDot = (props: any) => {
+        const { cx, cy, payload } = props;
+        const isSelected = selectedLift?.id === payload.id;
+        
+        return (
+            <g>
+                {/* Invisible larger circle for better hover detection */}
+                <circle
+                    cx={cx}
+                    cy={cy}
+                    r={12}
+                    fill="transparent"
+                    onClick={() => handleLiftClick(payload.id)}
+                    style={{ cursor: 'pointer' }}
+                />
+                {/* Visible dot */}
+                <circle
+                    cx={cx}
+                    cy={cy}
+                    r={isSelected ? 8 : 6}
+                    fill="#f97316"
+                    stroke="#000"
+                    strokeWidth={2}
+                    onClick={() => handleLiftClick(payload.id)}
+                    style={{ cursor: 'pointer', pointerEvents: 'none' }}
+                />
+            </g>
+        );
+    };
+
+    // Custom tooltip component
+    const CustomTooltip = ({ active, payload }: any) => {
+        if (active && payload && payload.length) {
+            const data = payload[0].payload;
+            return (
+                <div className="bg-white bg-opacity-90 border border-gray-300 rounded-lg p-3 shadow-lg">
+                    <p className="font-semibold mb-2">{data.dateTime}</p>
+                    <p className="text-sm">Weight: {data.weight.toFixed(1)} {useKgs ? 'kg' : 'lb'}</p>
+                    <p className="text-sm">Reps: {data.reps}</p>
+                    <p className="text-sm font-semibold text-orange-600">1RM: {data.oneRepMax.toFixed(2)} {useKgs ? 'kg' : 'lb'}</p>
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (
-        <div className="min-w-2xl w-full h-64 border border-b-gray-500 flex items-center justify-center">
-            TODO: Display previous lifts here in a graph
-        </div>
+        <ResponsiveContainer width="100%" height={400} className="border border-gray-300 rounded-lg">
+            <LineChart data={chartData} margin={{ top: 40, right: 80, bottom: 25, left: 40 }}>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-gray-300" />
+                <XAxis 
+                    dataKey="date" 
+                    stroke="#000"
+                    tick={{ fill: '#000' }}
+                >
+                    <Label value="Date" offset={-10} position="insideBottom" style={{ fill: '#000', fontWeight: 'bold' }} />
+                </XAxis>
+                <YAxis 
+                    stroke="#000"
+                    tick={{ fill: '#000' }} 
+                >
+                    <Label 
+                        value={`1RM (${useKgs ? 'kg' : 'lb'})`} 
+                        angle={-90} 
+                        position="insideLeft" 
+                        style={{ fill: '#000', fontWeight: 'bold', textAnchor: 'middle' }} 
+                    />
+                </YAxis>
+                <Tooltip content={<CustomTooltip />} cursor={true} isAnimationActive={"auto"} animationDuration={1} />
+                <Line 
+                    type="monotone" 
+                    dataKey="oneRepMax" 
+                    stroke="#f97316"
+                    strokeWidth={2}
+                    dot={<CustomDot />}
+                    activeDot={false}
+                />
+            </LineChart>
+        </ResponsiveContainer>
     );
 }

@@ -132,3 +132,22 @@ export async function updateLift(id: string, updates: { weight?: number; reps?: 
         return null;
     }
 }
+
+// Deletes an existing lift
+export async function deleteLift(id: string): Promise<Lift | null> {
+    try {
+        const response: Response = await fetch('/api/lifts', {
+            method: 'DELETE',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+        });
+        if(!response.ok) {
+            throw new Error(`Failed to delete lift: ${response.status} ${response.statusText}`);
+        }
+        const data: Lift = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error deleting lift:", error);
+        return null;
+    }
+}
