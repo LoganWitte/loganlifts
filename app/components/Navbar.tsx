@@ -11,7 +11,7 @@ export default function navbar() {
     const { data: session, status } = useSession();
     
     return(
-        <div className="w-full h-fit bg-orange-500 border-b-1 border-black text-white flex items-center justify-between">
+        <nav className="fixed top-0 left-0 w-full h-17 bg-orange-500 border-b border-black text-white flex items-center justify-between z-100">
             <Link href="/" className="p-2 text-black text-lg sm:text-2xl md:text-4xl">
                 Logan Lifts™
             </Link>
@@ -24,10 +24,6 @@ export default function navbar() {
                     Exercises 
                     <Dumbbell className="ml-1" />
                 </Link>
-                <Link href="nutrition" className="p-2 my-2 mx-2 md:mx-4 hover:scale-105 transition duration-300 rounded-md bg-[#00000080] flex flex-nowrap items-center">
-                    Nutrition
-                    <Apple className="ml-1" />
-                </Link>
                 {
                     status === "unauthenticated" ?
                     <Link href="/auth" className="p-2 my-2 mx-2 md:mx-4 hover:scale-105 transition duration-300 rounded-md bg-[#00000080] flex flex-nowrap items-center">
@@ -35,7 +31,7 @@ export default function navbar() {
                         <LogIn className="ml-1" />
                     </Link>
                     :
-                    <Link href="/auth" className="w-[50px] h-[50px] m-2 shrink-0" title="Account">
+                    <Link href="/auth" className="w-12.5 h-12.5 m-2 shrink-0" title="Account">
                                 <Image src={session?.user?.image || default_avatar} alt="Account" width={50} height={50} 
                                 className="rounded-full hover:scale-105 transition duration-300 hover:cursor-pointer" />
                     </Link>
@@ -43,6 +39,6 @@ export default function navbar() {
                 
                 
             </div>
-        </div>
+        </nav>
     );
 }

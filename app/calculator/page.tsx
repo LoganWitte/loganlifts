@@ -36,7 +36,7 @@ export default function page() {
     const { data: session, status } = useSession();
 
     return (
-        <div className="w-full h-fit min-h-screen flex flex-col items-center bg-stone-400">
+        <div className="w-full h-fit flex flex-col items-center bg-stone-400">
             <div className="w-fit h-fit flex flex-col items-center bg-slate-200 p-4 m-4 rounded border border-black">
                 <div className="text-lg sm:text-3xl my-4">1RM Calculator</div>
                 <ToggleSwitch trueString="Kilograms" falseString="Pounds" value={useKgs} setValue={setUseKgs} />
