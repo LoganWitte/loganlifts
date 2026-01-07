@@ -110,7 +110,9 @@ export default function Lifts(props: LiftsProps) {
         const num = parseFloat(value);
         if (!isNaN(num) && num >= 0) {
             setWeightInput(num);
+            return;
         }
+        setWeightInput(0);
     };
 
     const handleRepsChange = (value: string) => {
@@ -121,7 +123,9 @@ export default function Lifts(props: LiftsProps) {
         const num = parseInt(value, 10);
         if (!isNaN(num) && num >= 0) {
             setRepsInput(num);
+            return;
         }
+        setRepsInput(0);
     };
 
     const handleEditWeightChange = (value: string) => {
@@ -132,7 +136,9 @@ export default function Lifts(props: LiftsProps) {
         const num = parseFloat(value);
         if (!isNaN(num) && num >= 0) {
             setEditWeightInput(num);
+            return;
         }
+        setEditWeightInput(0);
     };
 
     const handleEditRepsChange = (value: string) => {
@@ -143,7 +149,9 @@ export default function Lifts(props: LiftsProps) {
         const num = parseInt(value, 10);
         if (!isNaN(num) && num >= 0) {
             setEditRepsInput(num);
+            return;
         }
+        setEditRepsInput(0);
     };
 
     // Log lift button click handler
