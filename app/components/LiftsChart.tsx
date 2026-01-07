@@ -34,7 +34,6 @@ export default function LiftsChart({ lifts, useKgs, selectedLift, setSelectedLif
             if(lift === undefined) {
                 console.error(`Lift with id ${liftId} not found`);
             }
-            // Note: still clears selection if lift is undefined (should never happen)
             setSelectedLift(lift);
         }
     }
@@ -46,7 +45,6 @@ export default function LiftsChart({ lifts, useKgs, selectedLift, setSelectedLif
         
         return (
             <g>
-                {/* Invisible larger circle for better hover detection */}
                 <circle
                     cx={cx}
                     cy={cy}
@@ -55,7 +53,6 @@ export default function LiftsChart({ lifts, useKgs, selectedLift, setSelectedLif
                     onClick={() => handleLiftClick(payload.id)}
                     style={{ cursor: 'pointer' }}
                 />
-                {/* Visible dot */}
                 <circle
                     cx={cx}
                     cy={cy}
@@ -75,11 +72,11 @@ export default function LiftsChart({ lifts, useKgs, selectedLift, setSelectedLif
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-white bg-opacity-90 border border-gray-300 rounded-lg p-3 shadow-lg">
-                    <p className="font-semibold mb-2">{data.dateTime}</p>
-                    <p className="text-sm">Weight: {data.weight.toFixed(1)} {useKgs ? 'kg' : 'lb'}</p>
-                    <p className="text-sm">Reps: {data.reps}</p>
-                    <p className="text-sm font-semibold text-orange-600">1RM: {data.oneRepMax.toFixed(2)} {useKgs ? 'kg' : 'lb'}</p>
+                <div className="bg-white bg-opacity-90 border border-gray-300 rounded-lg p-2 sm:p-3 shadow-lg text-xs sm:text-sm">
+                    <p className="font-semibold mb-1 sm:mb-2">{data.dateTime}</p>
+                    <p>Weight: {data.weight.toFixed(1)} {useKgs ? 'kg' : 'lb'}</p>
+                    <p>Reps: {data.reps}</p>
+                    <p className="font-semibold text-orange-600">1RM: {data.oneRepMax.toFixed(2)} {useKgs ? 'kg' : 'lb'}</p>
                 </div>
             );
         }
@@ -87,25 +84,42 @@ export default function LiftsChart({ lifts, useKgs, selectedLift, setSelectedLif
     };
 
     return (
-        <ResponsiveContainer width="100%" height={400} className="border border-gray-300 rounded-lg">
-            <LineChart data={chartData} margin={{ top: 40, right: 80, bottom: 25, left: 40 }}>
+        <ResponsiveContainer width="100%" height={300} className="border border-gray-300 rounded-lg sm:h-96">
+            <LineChart 
+                data={chartData} 
+                margin={{ 
+                    top: 30, 
+                    right: 10, 
+                    bottom: 40, 
+                    left: 10 
+                }}
+            >
                 <CartesianGrid strokeDasharray="3 3" className="stroke-gray-300" />
                 <XAxis 
                     dataKey="date" 
                     stroke="#000"
-                    tick={{ fill: '#000' }}
+                    tick={{ fill: '#000', fontSize: 11 }}
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
                 >
-                    <Label value="Date" offset={-10} position="insideBottom" style={{ fill: '#000', fontWeight: 'bold' }} />
+                    <Label 
+                        value="Date" 
+                        offset={0} 
+                        position="insideBottom" 
+                        style={{ fill: '#000', fontWeight: 'bold', fontSize: 12 }} 
+                    />
                 </XAxis>
                 <YAxis 
                     stroke="#000"
-                    tick={{ fill: '#000' }} 
+                    tick={{ fill: '#000', fontSize: 11 }}
+                    width={45}
                 >
                     <Label 
                         value={`1RM (${useKgs ? 'kg' : 'lb'})`} 
                         angle={-90} 
                         position="insideLeft" 
-                        style={{ fill: '#000', fontWeight: 'bold', textAnchor: 'middle' }} 
+                        style={{ fill: '#000', fontWeight: 'bold', textAnchor: 'middle', fontSize: 12 }} 
                     />
                 </YAxis>
                 <Tooltip content={<CustomTooltip />} cursor={true} isAnimationActive={"auto"} animationDuration={1} />

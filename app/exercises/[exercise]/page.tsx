@@ -26,13 +26,6 @@ export default function Page() {
         convertedReps = isNaN(convertedReps) ? undefined : Math.max(convertedReps, 0)
     }
 
-    // Creates state from converted params
-    // Initial weight is (float, >= 0, rounded to 2 places) or undefined if not present
-    // Initial reps is (integer, >= 0) or undefined if not present
-    const [weight, setWeight] = useState<number>(convertedWeight || 135);
-    const [reps, setReps] = useState<number>(convertedReps || 1);
-    const [inKgs, setInKgs] = useState<boolean>(isKgsParam);
-
     // Pulls exercises from context
     const { exercises, isLoading } = useExerciseContext();
     
@@ -78,11 +71,9 @@ export default function Page() {
             return false;
         }
         try {
-            // API call to add lift
             const newLift = await addLift(exercise.id, inKgs ? kgsToPounds(weight) : weight, reps, time);
             if(!newLift) throw new Error("Failed to add lift");
             
-            // Update local state with the new lift (success!)
             setUserLifts(prevLifts => [...prevLifts, newLift]);
             
             return true;
@@ -95,6 +86,9 @@ export default function Page() {
 
     // Edits a single lift
     async function editLift(id: string, updates: { weight?: number; reps?: number; time?: Date }): Promise<boolean> {
+
+        const { weight, reps } = updates;
+
         if(userLifts.find(lift => lift.id === id) === undefined) {
             window.alert("Unable to edit lift: lift not found.");
             return false;
@@ -111,7 +105,6 @@ export default function Page() {
             const newLift = await updateLift(id, updates);
             if(newLift === null) throw new Error("Failed to update lift");
 
-            // Amends lift with new lift
             const newUserLifts = [...userLifts];
             const liftIndex = newUserLifts.findIndex(lift => lift.id === id);
             if(liftIndex === -1) {
@@ -166,36 +159,42 @@ export default function Page() {
     }
     
     return(
-        <div className="w-full min-h-screen flex flex-col items-center bg-slate-200 sm:bg-stone-400 p-4">
+        <div className="w-full min-h-screen flex flex-col items-center bg-slate-200 sm:bg-stone-400 p-2 sm:p-4">
             <div className="w-full max-w-4xl flex flex-col items-center bg-slate-200 sm:p-6 sm:my-4 sm:rounded-lg sm:border sm:border-black">
                 
-                <h1 className="text-2xl font-semibold mb-6">{exercise.name}</h1>
+                <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 px-2 text-center">{exercise.name}</h1>
 
-                <div className="w-full max-w-2xl space-y-4 mb-6">
+                <div className="w-full max-w-2xl space-y-3 sm:space-y-4 mb-4 sm:mb-6 px-2 sm:px-4">
                     <div>
-                        <h2 className="font-semibold mb-2">Description:</h2>
-                        <p className="text-gray-700">{exercise.description}</p>
+                        <h2 className="font-semibold mb-2 text-sm sm:text-base">Description:</h2>
+                        <p className="text-gray-700 text-sm sm:text-base">{exercise.description}</p>
                     </div>
 
-                    <div className="flex gap-2">
-                        <h2 className="font-semibold">Category:</h2>
-                        <p className="text-gray-700">{exercise.category}</p>
+                    <div className="flex gap-2 flex-wrap">
+                        <h2 className="font-semibold text-sm sm:text-base">Category:</h2>
+                        <p className="text-gray-700 text-sm sm:text-base">{exercise.category}</p>
                     </div>
                     
-                    <div className="flex gap-2">
-                        <h2 className="font-semibold">Affected regions:</h2>
-                        <p className="text-gray-700">{exercise.bodyParts.join(", ")}</p>
+                    <div className="flex gap-2 flex-wrap">
+                        <h2 className="font-semibold text-sm sm:text-base">Affected regions:</h2>
+                        <p className="text-gray-700 text-sm sm:text-base">{exercise.bodyParts.join(", ")}</p>
                     </div>
 
-                    <div className="flex gap-2">
-                        <h2 className="font-semibold">Tags:</h2>
-                        <p className="text-gray-700">{exercise.tags.join(", ")}</p>
+                    <div className="flex gap-2 flex-wrap">
+                        <h2 className="font-semibold text-sm sm:text-base">Tags:</h2>
+                        <p className="text-gray-700 text-sm sm:text-base">{exercise.tags.join(", ")}</p>
                     </div>
                 </div>
 
-                <div className="text-xl font-semibold mb-4">Your Lifts:</div>
+                <div className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Your Lifts:</div>
                 {status === "authenticated" ? 
-                    <Lifts lifts={userLifts} logLift={logLift} editLift={editLift} deleteLift={removeLift} /> : status === "loading" ? 
+                    <Lifts 
+                        lifts={userLifts} 
+                        logLift={logLift} 
+                        editLift={editLift} 
+                        deleteLift={removeLift}
+                        defaultUseKgs={isKgsParam}
+                    /> : status === "loading" ? 
                     <div>Loading...</div> : 
                     <div>Please login to see your lifts</div>
                 }

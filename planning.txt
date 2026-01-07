@@ -20,6 +20,6 @@ TODO:
         Create form to add a lift, recieves: { weight: number, reps: number, isKgs: boolean, time?: DateTime }
         Create graphical display (x -> time, y -> 1RM) for 'userLifts'
             Graph should allow users to click on and edit { weight, reps, time }, or delete a lift.
-    In '/exercises/[exercise]:
+    Done -> In '/exercises/[exercise]:
         Make page more responsive / mobile friendly.
             This requires altering the '/exercises/[exercise]' page as well as 'Lifts' and 'LiftsChart' components.

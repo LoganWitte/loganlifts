@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/authOptions";
 import prisma from "@/lib/prisma";
+import { BODY_PART_OPTIONS, CATEGORY_OPTIONS } from "@/app/services/constants";
 
 //Returns global & user-specific exercises (if logged in)
 export async function GET(req: Request) {
@@ -58,12 +59,11 @@ export async function POST(req: Request) {
             return new NextResponse("Invalid exercise name", { status: 400 });
         }
 
-        const acceptedBodyParts = ["Whole Body", "Core", "Legs", "Back", "Chest", "Shoulders", "Biceps", "Triceps", "Forearms"];
-        if(bodyParts.some((part: string) => !acceptedBodyParts.includes(part))) {
+        if(bodyParts.some((part: string) => !BODY_PART_OPTIONS.splice(1).includes(part))) {
             return new NextResponse("Invalid body parts", { status: 400 });
         }
 
-        if(!category || !["Any Category", "Barbell", "Bodyweight", "Dumbbell", "Machine", "Cable"].includes(category)) {
+        if(!category || !CATEGORY_OPTIONS.splice(1).includes(category)) {
             return new NextResponse("Invalid or missing category", { status: 400 });
         }
 

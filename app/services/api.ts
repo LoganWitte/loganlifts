@@ -2,9 +2,9 @@
 // Following type declerations should be standard throughout app.
 // This includes frontend sanitization as well as schema.
 
-export type Category = "Barbell" | "Bodyweight" | "Dumbbell" | "Machine" | "Cable";
+export type Category = "Barbell" | "Bodyweight" | "Dumbbell" | "Machine" | "Cable" | "Kettlebell";
 
-export type acceptedBodyPart = "Whole Body" | "Core" | "Legs" | "Back" | "Chest" | "Shoulders" | "Biceps" | "Triceps" | "Forearms";
+export type acceptedBodyPart = "Whole Body" | "Chest" | "Back" | "Shoulders" | "Biceps" | "Triceps" | "Forearms" | "Quads" | "Hamstrings" | "Calves" | "Glutes" | "Abductors" | "Adductors" | "Core";
 
 export type Exercise = {
     id: string;                 //String @id @default(cuid())

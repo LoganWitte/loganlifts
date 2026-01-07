@@ -13,11 +13,12 @@ type LiftsProps = {
     logLift: (weight: number, reps: number, inKgs: boolean, time: Date) => Promise<boolean>;
     editLift: (id: string, updates: { weight?: number; reps?: number; time?: Date }) => Promise<boolean>;
     deleteLift: (id: string) => Promise<boolean>;
+    defaultUseKgs?: boolean;
 };
 
 export default function Lifts(props: LiftsProps) {
 
-    const { lifts, logLift, editLift, deleteLift } = props;
+    const { lifts, logLift, editLift, deleteLift, defaultUseKgs = false } = props;
 
     // Recieves & sanitizes search params
     const searchParams = useSearchParams();
@@ -34,7 +35,7 @@ export default function Lifts(props: LiftsProps) {
     }
 
     // Slider states
-    const [useKgs, setUseKgs] = useState<boolean>(false);
+    const [useKgs, setUseKgs] = useState<boolean>(defaultUseKgs);
     const [editEnabled, setEditEnabled] = useState<boolean>(false);
 
     // Clears selectedLift when selecting 'add lift'
@@ -92,13 +93,11 @@ export default function Lifts(props: LiftsProps) {
 
     // Calculate 1RM from weight & reps (add form)
     const oneRepMax = useMemo<number>(() => {
-        // ! is fine bcs recommended formula is always defined.
         return Math.round(getOneRepMax(weightInput, repsInput, "Recommended")! * 100) / 100;
     }, [weightInput, repsInput]);
 
     // Calculate 1RM from weight & reps (edit form)
     const editOneRepMax = useMemo<number>(() => {
-        // ! is fine bcs recommended formula is always defined.
         return Math.round(getOneRepMax(editWeightInput, editRepsInput, "Recommended")! * 100) / 100;
     }, [editWeightInput, editRepsInput]);
 
@@ -107,7 +106,6 @@ export default function Lifts(props: LiftsProps) {
         setAddMessage("");
         const result = await logLift(weightInput, repsInput, useKgs, new Date(newLiftTime));
         if(result) {
-            // Reset form after successful log
             setWeightInput(135);
             setRepsInput(1);
             const now = new Date();
@@ -127,7 +125,6 @@ export default function Lifts(props: LiftsProps) {
             return;
         }
 
-        // Convert weight back to pounds if necessary
         const weightInPounds = useKgs ? kgsToPounds(editWeightInput) : editWeightInput;
 
         const result = await editLift(selectedLift.id, {
@@ -177,7 +174,7 @@ export default function Lifts(props: LiftsProps) {
     }
 
     return (
-        <div className="w-[80%] flex flex-col items-center p-4">
+        <div className="w-full flex flex-col items-center px-2 sm:px-4">
             
             <div className="mb-4">
                 <ToggleSwitch falseString="Pounds" trueString="Kilograms" value={useKgs} setValue={setUseKgs} />
@@ -195,90 +192,90 @@ export default function Lifts(props: LiftsProps) {
                     <ToggleSwitch falseString="Add new" trueString="Edit existing" value={editEnabled} setValue={setEditEnabled} />
                 </div>
                 {!editEnabled ? (
-                    <div className="p-4">
-                        <div className="flex justify-between items-center gap-4 mb-3">
-                            <label htmlFor="weightInput" className="font-bold min-w-fit">Weight ({useKgs ? "kg" : "lb"}):</label>
-                            <input type="number" id="weightInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-24" value={weightInput} onChange={(e) => setWeightInput(parseFloat(e.target.value) || 0)}></input>
+                    <div className="p-3 sm:p-4">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
+                            <label htmlFor="weightInput" className="font-bold text-sm sm:text-base">Weight ({useKgs ? "kg" : "lb"}):</label>
+                            <input type="number" id="weightInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" value={weightInput} onChange={(e) => setWeightInput(parseFloat(e.target.value) || 0)}></input>
                         </div>
-                        <div className="flex justify-between items-center gap-4 mb-3">
-                            <label htmlFor="repsInput" className="font-bold min-w-fit">Reps:</label>
-                            <input type="number" id="repsInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-24" value={repsInput} onChange={(e) => setRepsInput(parseInt(e.target.value) || 0)}></input>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
+                            <label htmlFor="repsInput" className="font-bold text-sm sm:text-base">Reps:</label>
+                            <input type="number" id="repsInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" value={repsInput} onChange={(e) => setRepsInput(parseInt(e.target.value) || 0)}></input>
                         </div>
-                        <div className="flex justify-between items-center gap-4 mb-3">
-                            <label htmlFor="1RMOutput" className="font-bold min-w-fit">1RM ({useKgs ? "kg" : "lb"}):</label>
-                            <output id="1RMOutput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-24 text-center">{oneRepMax}</output>
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
+                            <label htmlFor="1RMOutput" className="font-bold text-sm sm:text-base">1RM ({useKgs ? "kg" : "lb"}):</label>
+                            <output id="1RMOutput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-center text-sm sm:text-base">{oneRepMax}</output>
                         </div>
                         <div className="flex flex-col gap-2 mb-3">
-                            <label htmlFor="timeInput" className="font-bold">Date & Time:</label>
-                            <input id="timeInput" type="datetime-local" className="border border-gray-300 bg-gray-100 rounded px-3 py-2"
+                            <label htmlFor="timeInput" className="font-bold text-sm sm:text-base">Date & Time:</label>
+                            <input id="timeInput" type="datetime-local" className="border border-gray-300 bg-gray-100 rounded px-3 py-2 text-sm sm:text-base"
                                 value={newLiftTime} onChange={(e) => setNewLiftTime(e.target.value)}
                             />
                         </div>
                         {addMessage !== "" && (
                             <div className="mb-3">
-                                <p className="bg-gray-100 border border-gray-300 rounded px-3 py-2 text-center">{addMessage}</p>
+                                <p className="bg-gray-100 border border-gray-300 rounded px-3 py-2 text-center text-sm sm:text-base">{addMessage}</p>
                             </div>
                         )}
                         <div className="pt-2">
                             <button className="w-full bg-orange-500 px-4 py-3 rounded-lg text-white font-bold flex justify-center items-center gap-2
-                                border border-orange-600 hover:bg-orange-600 transition duration-300"
+                                border border-orange-600 hover:bg-orange-600 transition duration-300 text-sm sm:text-base"
                                 onClick={handleLogClick}
                             >
                                 Log lift
-                                <BicepsFlexed />
+                                <BicepsFlexed size={18} className="sm:w-6 sm:h-6" />
                             </button>
                         </div>
                     </div>
                 ) : (
-                    <div className="p-4">
+                    <div className="p-3 sm:p-4">
                         {!selectedLift ? (
-                            <p className="text-center text-gray-600">Please select a lift to edit.</p>
+                            <p className="text-center text-gray-600 text-sm sm:text-base">Please select a lift to edit.</p>
                         ) : (
                             <>
-                                <div className="flex justify-between items-center gap-4 mb-3">
-                                    <label htmlFor="editWeightInput" className="font-bold min-w-fit">Weight ({useKgs ? "kg" : "lb"}):</label>
-                                    <input type="number" id="editWeightInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-24" value={editWeightInput} onChange={(e) => setEditWeightInput(parseFloat(e.target.value) || 0)}></input>
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
+                                    <label htmlFor="editWeightInput" className="font-bold text-sm sm:text-base">Weight ({useKgs ? "kg" : "lb"}):</label>
+                                    <input type="number" id="editWeightInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" value={editWeightInput} onChange={(e) => setEditWeightInput(parseFloat(e.target.value) || 0)}></input>
                                 </div>
-                                <div className="flex justify-between items-center gap-4 mb-3">
-                                    <label htmlFor="editRepsInput" className="font-bold min-w-fit">Reps:</label>
-                                    <input type="number" id="editRepsInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-24" value={editRepsInput} onChange={(e) => setEditRepsInput(parseInt(e.target.value) || 0)}></input>
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
+                                    <label htmlFor="editRepsInput" className="font-bold text-sm sm:text-base">Reps:</label>
+                                    <input type="number" id="editRepsInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" value={editRepsInput} onChange={(e) => setEditRepsInput(parseInt(e.target.value) || 0)}></input>
                                 </div>
-                                <div className="flex justify-between items-center gap-4 mb-3">
-                                    <label htmlFor="edit1RMOutput" className="font-bold min-w-fit">1RM ({useKgs ? "kg" : "lb"}):</label>
-                                    <output id="edit1RMOutput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-24 text-center">{editOneRepMax}</output>
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
+                                    <label htmlFor="edit1RMOutput" className="font-bold text-sm sm:text-base">1RM ({useKgs ? "kg" : "lb"}):</label>
+                                    <output id="edit1RMOutput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-center text-sm sm:text-base">{editOneRepMax}</output>
                                 </div>
                                 <div className="flex flex-col gap-2 mb-3">
-                                    <label htmlFor="editTimeInput" className="font-bold">Date & Time:</label>
-                                    <input id="editTimeInput" type="datetime-local" className="border border-gray-300 bg-gray-100 rounded px-3 py-2"
+                                    <label htmlFor="editTimeInput" className="font-bold text-sm sm:text-base">Date & Time:</label>
+                                    <input id="editTimeInput" type="datetime-local" className="border border-gray-300 bg-gray-100 rounded px-3 py-2 text-sm sm:text-base"
                                         value={editLiftTime} onChange={(e) => setEditLiftTime(e.target.value)}
                                     />
                                 </div>
                                 {editMessage !== "" && (
                                     <div className="mb-3">
-                                        <p className="bg-gray-100 border border-gray-300 rounded px-3 py-2 text-center">{editMessage}</p>
+                                        <p className="bg-gray-100 border border-gray-300 rounded px-3 py-2 text-center text-sm sm:text-base">{editMessage}</p>
                                     </div>
                                 )}
                                 <div className="pt-2 space-y-2">
                                     <button className="w-full bg-orange-500 px-4 py-3 rounded-lg text-white font-bold flex justify-center items-center gap-2
-                                        border border-orange-600 hover:bg-orange-600 hover:cursor-pointer transition duration-300"
+                                        border border-orange-600 hover:bg-orange-600 hover:cursor-pointer transition duration-300 text-sm sm:text-base"
                                         onClick={handleEditClick}
                                     >
                                         Save changes
-                                        <BicepsFlexed />
+                                        <BicepsFlexed size={18} className="sm:w-6 sm:h-6" />
                                     </button>
                                     <div className="flex gap-2">
                                         <button className="flex-1 bg-gray-500 px-4 py-2 rounded-lg text-white font-bold
-                                            border border-gray-600 hover:bg-gray-600 hover:cursor-pointer transition duration-300"
+                                            border border-gray-600 hover:bg-gray-600 hover:cursor-pointer transition duration-300 text-sm sm:text-base"
                                             onClick={handleCancelClick}
                                         >
                                             Cancel
                                         </button>
                                         <button className="flex-1 bg-red-500 px-4 py-2 rounded-lg text-white font-bold flex justify-center items-center gap-2
-                                            border border-red-600 hover:bg-red-600 hover:cursor-pointer transition duration-300"
+                                            border border-red-600 hover:bg-red-600 hover:cursor-pointer transition duration-300 text-sm sm:text-base"
                                             onClick={handleDeleteClick}
                                         >
                                             Delete
-                                            <Trash2 size={18} />
+                                            <Trash2 size={16} className="sm:w-5 sm:h-5" />
                                         </button>
                                     </div>
                                 </div>
