@@ -6,7 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import default_avatar from "../images/default_avatar.png"
 
-export default function page() {
+export default function Page() {
 
     const { data: session, status } = useSession();
 

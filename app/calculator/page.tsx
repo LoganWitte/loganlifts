@@ -8,7 +8,7 @@ import EquivalentLifts from "../components/EquivalentLifts";
 import { allowedFormula, getOneRepMax } from "../services/formulas";
 import { useSession } from "next-auth/react";
 
-export default function page() {
+export default function Page() {
 
     // Must mirror 'allowedFormula' from 'formulas.ts':
     // "Recommended" | "Brzycki" | "Epley" | "Lombardi" | "OConnor";
@@ -70,7 +70,7 @@ export default function page() {
                         <option value="Brzycki">Brzycki</option>
                         <option value="Epley">Epley</option>
                         <option value="Lombardi">Lombardi</option>
-                        <option value="OConnor">O'Connor</option>
+                        <option value="OConnor">O&apos;Connor</option>
                     </select>
                     <Link href="/calculationinfo" ><CircleQuestionMark className="ml-1 opacity-75 hover:opacity-100 hover:cursor-pointer" /></Link>
 

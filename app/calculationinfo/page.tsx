@@ -10,9 +10,9 @@ export default function page() {
                 <div className="text-lg sm:text-2xl mt-2 font-semibold">Calculation Info & Formulae:</div>
                 <div className="mt-1 text-center">
                     Your <span className="font-semibold mx-1">1RM</span> (one-rep-maximum) is a common way to measure strength in a given movement.<br />
-                    Rather than perform this 1RM, it's possible to estimate it using a longer set (e.g., 8 repetitions).<br />
+                    Rather than perform this 1RM, it&apos;s possible to estimate it using a longer set (e.g., 8 repetitions).<br />
                     This can be done using several formulas which are showcased below.<br />
-                    <div className="my-4 ">Our "Recommended" formula uses the following method:</div>
+                    <div className="my-4 ">Our &quot;Recommended&quot; formula uses the following method:</div>
                     <div className="flex flex-col items-center">
                         <div className="grid grid-cols-[1fr_2fr_3fr] w-fit p-2 font-sans">
                             {/* Header */}
@@ -60,7 +60,7 @@ export default function page() {
                             </div>
                             {/*Row 1*/}
                             <div className="text-center pt-1 flex items-center justify-center px-4">
-                                O'Connor formula
+                                O&apos;Connor formula
                             </div>
                             <div className="text-center pt-1 flex items-center justify-center px-4">
                                 <div className="text-xs flex items-center justify-center px-4">

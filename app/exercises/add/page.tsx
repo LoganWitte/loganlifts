@@ -45,7 +45,7 @@ export default function AddExercisePage() {
                 setIsCheckingAdmin(false);
             }
         })();
-    }, []);
+    }, [status]);
 
     // Validation function
     const validateForm = () => {

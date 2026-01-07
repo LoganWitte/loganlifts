@@ -89,7 +89,7 @@ export default function Lifts(props: LiftsProps) {
     // Enables edit mode when selecting a lift
     useEffect(() => {
         if(selectedLift !== undefined && !editEnabled) setEditEnabled(true);
-    }, [selectedLift])
+    }, [selectedLift, editEnabled]);
 
     // Calculate 1RM from weight & reps (add form)
     const oneRepMax = useMemo<number>(() => {

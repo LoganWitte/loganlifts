@@ -6,7 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import default_avatar from "../images/default_avatar.png"
 import Image from "next/image";
 
-export default function navbar() {
+export default function Navbar() {
 
     const { data: session, status } = useSession();
     
