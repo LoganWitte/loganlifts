@@ -150,17 +150,17 @@ export default function Page() {
     
     // Handle loading state
     if (isLoading) {
-        return <div className="flex items-center justify-center min-h-screen">Loading exercises...</div>;
+        return <div className="flex items-center justify-center min-h-screen bg-slate-200">Loading exercises...</div>;
     }
     
     // Handle exercise not found
     if (!exercise) {
-        return <div className="flex items-center justify-center min-h-screen">Exercise not found</div>;
+        return <div className="flex items-center justify-center min-h-screen bg-slate-200">Exercise not found</div>;
     }
     
     return(
-        <div className="w-full min-h-screen flex flex-col items-center bg-slate-200 sm:bg-stone-400 p-2 sm:p-4">
-            <div className="w-full max-w-4xl flex flex-col items-center bg-slate-200 sm:p-6 sm:my-4 sm:rounded-lg sm:border sm:border-black">
+        <div className="w-full min-h-screen flex flex-col items-center bg-slate-200 sm:bg-stone-400 sm:p-4">
+            <div className="w-full max-w-4xl flex flex-col items-center bg-slate-200 p-2 sm:p-6 sm:my-4 sm:rounded-lg sm:border sm:border-black">
                 
                 <h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 px-2 text-center">{exercise.name}</h1>
 
