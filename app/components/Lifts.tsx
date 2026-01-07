@@ -218,7 +218,7 @@ export default function Lifts(props: LiftsProps) {
                         )}
                         <div className="pt-2">
                             <button className="w-full bg-orange-500 px-4 py-3 rounded-lg text-white font-bold flex justify-center items-center gap-2
-                                border border-orange-600 hover:bg-orange-600 transition duration-300 text-sm sm:text-base"
+                                border border-orange-600 hover:bg-orange-600 hover:cursor-pointer transition duration-300 text-sm sm:text-base"
                                 onClick={handleLogClick}
                             >
                                 Log lift
