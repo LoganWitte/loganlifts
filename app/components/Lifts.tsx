@@ -101,6 +101,51 @@ export default function Lifts(props: LiftsProps) {
         return Math.round(getOneRepMax(editWeightInput, editRepsInput, "Recommended")! * 100) / 100;
     }, [editWeightInput, editRepsInput]);
 
+    // Input handlers with proper validation
+    const handleWeightChange = (value: string) => {
+        if (value === "") {
+            setWeightInput(0);
+            return;
+        }
+        const num = parseFloat(value);
+        if (!isNaN(num) && num >= 0) {
+            setWeightInput(num);
+        }
+    };
+
+    const handleRepsChange = (value: string) => {
+        if (value === "") {
+            setRepsInput(0);
+            return;
+        }
+        const num = parseInt(value, 10);
+        if (!isNaN(num) && num >= 0) {
+            setRepsInput(num);
+        }
+    };
+
+    const handleEditWeightChange = (value: string) => {
+        if (value === "") {
+            setEditWeightInput(0);
+            return;
+        }
+        const num = parseFloat(value);
+        if (!isNaN(num) && num >= 0) {
+            setEditWeightInput(num);
+        }
+    };
+
+    const handleEditRepsChange = (value: string) => {
+        if (value === "") {
+            setEditRepsInput(0);
+            return;
+        }
+        const num = parseInt(value, 10);
+        if (!isNaN(num) && num >= 0) {
+            setEditRepsInput(num);
+        }
+    };
+
     // Log lift button click handler
     async function handleLogClick() {
         setAddMessage("");
@@ -195,11 +240,27 @@ export default function Lifts(props: LiftsProps) {
                     <div className="p-3 sm:p-4">
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
                             <label htmlFor="weightInput" className="font-bold text-sm sm:text-base">Weight ({useKgs ? "kg" : "lb"}):</label>
-                            <input type="number" id="weightInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" value={weightInput} onChange={(e) => setWeightInput(parseFloat(e.target.value) || 0)}></input>
+                            <input 
+                                type="number" 
+                                id="weightInput" 
+                                className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" 
+                                value={weightInput === 0 ? "" : weightInput} 
+                                onChange={(e) => handleWeightChange(e.target.value)}
+                                min="0"
+                                step="0.01"
+                            />
                         </div>
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
                             <label htmlFor="repsInput" className="font-bold text-sm sm:text-base">Reps:</label>
-                            <input type="number" id="repsInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" value={repsInput} onChange={(e) => setRepsInput(parseInt(e.target.value) || 0)}></input>
+                            <input 
+                                type="number" 
+                                id="repsInput" 
+                                className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" 
+                                value={repsInput === 0 ? "" : repsInput} 
+                                onChange={(e) => handleRepsChange(e.target.value)}
+                                min="0"
+                                step="1"
+                            />
                         </div>
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
                             <label htmlFor="1RMOutput" className="font-bold text-sm sm:text-base">1RM ({useKgs ? "kg" : "lb"}):</label>
@@ -234,11 +295,27 @@ export default function Lifts(props: LiftsProps) {
                             <>
                                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
                                     <label htmlFor="editWeightInput" className="font-bold text-sm sm:text-base">Weight ({useKgs ? "kg" : "lb"}):</label>
-                                    <input type="number" id="editWeightInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" value={editWeightInput} onChange={(e) => setEditWeightInput(parseFloat(e.target.value) || 0)}></input>
+                                    <input 
+                                        type="number" 
+                                        id="editWeightInput" 
+                                        className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" 
+                                        value={editWeightInput === 0 ? "" : editWeightInput} 
+                                        onChange={(e) => handleEditWeightChange(e.target.value)}
+                                        min="0"
+                                        step="0.01"
+                                    />
                                 </div>
                                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
                                     <label htmlFor="editRepsInput" className="font-bold text-sm sm:text-base">Reps:</label>
-                                    <input type="number" id="editRepsInput" className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" value={editRepsInput} onChange={(e) => setEditRepsInput(parseInt(e.target.value) || 0)}></input>
+                                    <input 
+                                        type="number" 
+                                        id="editRepsInput" 
+                                        className="bg-gray-100 border border-gray-300 rounded px-3 py-2 w-full sm:w-24 text-sm sm:text-base" 
+                                        value={editRepsInput === 0 ? "" : editRepsInput} 
+                                        onChange={(e) => handleEditRepsChange(e.target.value)}
+                                        min="0"
+                                        step="1"
+                                    />
                                 </div>
                                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 mb-3">
                                     <label htmlFor="edit1RMOutput" className="font-bold text-sm sm:text-base">1RM ({useKgs ? "kg" : "lb"}):</label>
